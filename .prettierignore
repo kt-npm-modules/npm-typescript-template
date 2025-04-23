@@ -2,8 +2,10 @@
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+bun.lock
+bun.lockb
 
-CHANGELOG.md
-.github/
-.changeset/
-dist/
+# CHANGELOG.md
+# .github/
+# .changeset/
+# dist/

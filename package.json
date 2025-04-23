@@ -41,7 +41,7 @@
 	"scripts": {
 		"build": "rimraf ./dist && tsc --project tsconfig.json && npm run prepack",
 		"build:release": "rimraf ./dist && tsc --project tsconfig-release.json && npm run prepack",
-		"prepare": "echo 'This is called after installing the package locally.'",
+		"prepare": "bash ./scripts/npm-link.sh",
 		"prepack": "publint",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
