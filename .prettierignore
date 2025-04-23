@@ -4,8 +4,3 @@ pnpm-lock.yaml
 yarn.lock
 bun.lock
 bun.lockb
-
-# CHANGELOG.md
-# .github/
-# .changeset/
-# dist/
