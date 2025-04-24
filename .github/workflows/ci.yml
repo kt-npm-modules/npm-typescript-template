@@ -27,7 +27,7 @@ jobs:
       # Get the maximum node version from vars.NODE_MATRIX, which is a JSON array string
       - uses: actions/checkout@v4
       - id: max-node-version
-        run: echo "version=$(echo '${{ vars.NODE_MATRIX }}' | jq -r '. | max')" >> $GITHUB_OUTPUT
+        run: echo "version=$(echo '${{ vars.NODE_MATRIX }}' | jq -r '. | max')" >> "$GITHUB_OUTPUT"
       - run: echo "max node version = ${{ steps.max-node-version.outputs.version }}"
       - uses: actions/setup-node@v4
         with:
