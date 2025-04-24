@@ -21,26 +21,16 @@ jobs:
   #   steps:
   #     - run: ${{ tojson(github) }}
   #       shell: cat {0}
-  define-matrix:
-    strategy:
-      matrix:
-        node-version: ${{ fromJson(vars.NODE_MATRIX) }}
-    runs-on: ubuntu-latest
-    outputs:
-      node-versions: ${{ steps.node.outputs.node-versions }}
-    steps:
-      - run: echo "NODE_MATRIX=${{ max(vars.NODE_MATRIX) }}"
-      - run: echo "NODE_MATRIX=${{ matrix.node-version }}"
-      - run: echo "node-versions=$NODE_MATRIX"
-      - id: node
-        run: echo "node-versions=$NODE_MATRIX" >> "$GITHUB_OUTPUT"
   check:
     runs-on: ubuntu-latest
     steps:
+      # Get the maximum node version from vars.NODE_MATRIX, which is a JSON array string
+      - id: max-node-version
+        run: echo "max-node-version=$(echo '${{ vars.NODE_MATRIX }}' | jq -r '. | max')"
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ steps.max-node-version.outputs.max-node-version }}
           cache: npm
       - run: npm ci
       - run: npm run lint
@@ -49,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [20]
+        node-version: ${{ fromJson(vars.NODE_MATRIX) }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
