@@ -21,6 +21,16 @@ jobs:
   #   steps:
   #     - run: ${{ tojson(github) }}
   #       shell: cat {0}
+  checkX:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: kt-actions/npm-module-check
+        with:
+          matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
+          install-script: npm ci
+          bash-script: |
+            npm run check
+            npm run lint
   check:
     runs-on: ubuntu-latest
     steps:
