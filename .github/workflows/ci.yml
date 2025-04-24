@@ -30,6 +30,7 @@ jobs:
       node-versions: ${{ steps.node.outputs.node-versions }}
     steps:
       - run: echo "NODE_MATRIX=vars.NODE_MATRIX"
+      - run: echo "NODE_MATRIX=${{ matrix.node-version }}"
       - id: node
         run: echo "node-versions=$NODE_MATRIX" >> "$GITHUB_OUTPUT"
   check:
