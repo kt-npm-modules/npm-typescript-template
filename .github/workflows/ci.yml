@@ -25,9 +25,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: kt-public/github-actions/setup-node-latest@v1
+      - uses: kt-actions/setup-node-minmax@v1
         with:
-          matrix-node-version: ${{ vars.NODE_MATRIX }}
+          matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
           cache: npm
           cache-dependency-path: ./**/package-lock.json
       - run: npm ci
@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ${{ fromJson(vars.NODE_MATRIX) }}
+        node-version: ${{ fromJson(vars.MATRIX_NODE_VERSION) }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -66,7 +66,7 @@ jobs:
         with:
           fetch-depth: 0
       - id: max-node-version
-        run: echo "version=$(echo '${{ vars.NODE_MATRIX }}' | jq -r '. | max')" >> "$GITHUB_OUTPUT"
+        run: echo "version=$(echo '${{ vars.MATRIX_NODE_VERSION }}' | jq -r '. | max')" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ steps.max-node-version.outputs.version }}
