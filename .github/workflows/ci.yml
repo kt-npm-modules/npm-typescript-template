@@ -26,9 +26,9 @@ jobs:
     steps:
       # Get the maximum node version from vars.NODE_MATRIX, which is a JSON array string
       - uses: actions/checkout@v4
-      - uses: kt-public/setup-node-latest@v1
+      - uses: kt-public/github-actions/setup-node-latest@v1
         with:
-          node-version: ${{ steps.max-node-version.outputs.version }}
+          matrix-node-version: ${{ vars.NODE_MATRIX }}
           cache: npm
           cache-dependency-path: ./**/package-lock.json
       - run: npm ci
