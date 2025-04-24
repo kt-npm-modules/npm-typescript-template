@@ -5,7 +5,7 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=kt-public_npm-typescript-template&metric=coverage)](https://sonarcloud.io/summary/new_code?id=kt-public_npm-typescript-template)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=kt-public_npm-typescript-template&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=kt-public_npm-typescript-template)
 
-# npm-typescript-template
+# @ktarmyshov/npm-typescript-template
 
 Template repo for an NPM module in typescript
 
