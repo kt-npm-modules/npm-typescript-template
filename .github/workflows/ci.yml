@@ -24,7 +24,7 @@ jobs:
   checkX:
     runs-on: ubuntu-latest
     steps:
-      - uses: kt-actions/npm-module-check
+      - uses: kt-actions/npm-module-check@v1
         with:
           matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
           install-script: npm ci
