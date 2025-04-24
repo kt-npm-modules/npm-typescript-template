@@ -21,6 +21,17 @@ jobs:
   #   steps:
   #     - run: ${{ tojson(github) }}
   #       shell: cat {0}
+  define-matrix:
+    strategy:
+      matrix:
+        node-version: ${{ fromJson(vars.NODE_MATRIX) }}
+    runs-on: ubuntu-latest
+    outputs:
+      node-versions: ${{ steps.node.outputs.node-versions }}
+    steps:
+      - run: echo "NODE_MATRIX=vars.NODE_MATRIX"
+      - id: node
+        run: echo "node-versions=$NODE_MATRIX" >> "$GITHUB_OUTPUT"
   check:
     runs-on: ubuntu-latest
     steps:
