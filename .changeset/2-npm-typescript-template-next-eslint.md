@@ -1,5 +1,5 @@
 ---
-@ktarmyshov/npm-typescript-template: patch
+'@ktarmyshov/npm-typescript-template': patch
 ---
 
 dependabot: directory '/', update eslint
