@@ -41,25 +41,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - id: setup-node
-        uses: actions/setup-node@v4
+      - uses: kt-actions/npm-run-script@v1
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: npm
-          cache-dependency-path: ./**/package-lock.json
+          matrix-node-version: '[${{ matrix.node-version }}]'
+          install-script: npm ci
+          run-script: |
+            npm run build
+            npm test
 
-      - id: npm-cache
-        uses: actions/cache@v4
-        with:
-          path: ./**/node_modules
-          key: ${{ runner.os }}-npm-${{ steps.setup-node.outputs.node-version }}-${{ hashFiles('**/package-lock.json') }}
-
-      - run: npm ci
-        if: steps.npm-cache.outputs.cache-hit != 'true'
-
-      - run: npm run build
-
-      - run: npm run test
   codeql:
     uses: ./.github/workflows/codeql.yml
     secrets: inherit
