@@ -1,5 +1,5 @@
 {
-	"name": "npm-typescript-template-next",
+	"name": "@ktarmyshov/npm-typescript-template",
 	"description": "Template repository for npm packages written in TypeScript",
 	"version": "0.0.2",
 	"license": "MIT",

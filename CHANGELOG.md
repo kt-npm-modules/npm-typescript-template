@@ -1,4 +1,4 @@
-# npm-typescript-template-next
+# @ktarmyshov/npm-typescript-template
 
 ## 0.0.2
 
