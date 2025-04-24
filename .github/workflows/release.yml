@@ -5,6 +5,7 @@ on:
     workflows: ['CI']
     types:
       - completed
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
