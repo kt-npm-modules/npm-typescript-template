@@ -24,6 +24,8 @@ jobs:
   checkX:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - uses: kt-actions/npm-module-check@v1
         with:
           matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
