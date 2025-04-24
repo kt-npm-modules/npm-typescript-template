@@ -28,7 +28,6 @@ jobs:
       - uses: actions/checkout@v4
       - id: max-node-version
         run: echo "version=$(echo '${{ vars.NODE_MATRIX }}' | jq -r '. | max')" >> "$GITHUB_OUTPUT"
-      - run: echo "max node version = ${{ steps.max-node-version.outputs.version }}"
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ steps.max-node-version.outputs.version }}
