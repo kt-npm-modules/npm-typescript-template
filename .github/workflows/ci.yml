@@ -65,11 +65,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - id: max-node-version
-        run: echo "version=$(echo '${{ vars.MATRIX_NODE_VERSION }}' | jq -r '. | max')" >> "$GITHUB_OUTPUT"
-      - uses: actions/setup-node@v4
+      - uses: kt-actions/setup-node-minmax@v1
         with:
-          node-version: ${{ steps.max-node-version.outputs.version }}
+          matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
           cache: npm
           cache-dependency-path: ./**/package-lock.json
       - run: npm ci

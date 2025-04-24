@@ -44,11 +44,10 @@ jobs:
           fetch-depth: 0
           token: ${{ steps.app-token.outputs.token }}
 
-      - id: max-node-version
-        run: echo "version=$(echo '${{ vars.NODE_MATRIX }}' | jq -r '. | max')" >> "$GITHUB_OUTPUT"
-      - uses: actions/setup-node@v4
+      - uses: kt-actions/setup-node-minmax@v1
         with:
-          node-version: ${{ steps.max-node-version.outputs.version }}
+          matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
+          earliest: true
           cache: npm
           cache-dependency-path: ./**/package-lock.json
 
