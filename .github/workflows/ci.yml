@@ -21,42 +21,18 @@ jobs:
   #   steps:
   #     - run: ${{ tojson(github) }}
   #       shell: cat {0}
-  checkX:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - uses: kt-actions/npm-module-check@v1
+      - uses: kt-actions/npm-run-script@v1
         with:
           matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
           install-script: npm ci
           run-script: |
             npm run check
             npm run lint
-  check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - id: setup-node
-        uses: kt-actions/setup-node-minmax@v1
-        with:
-          matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
-          cache: npm
-          cache-dependency-path: ./**/package-lock.json
-
-      - id: npm-cache
-        uses: actions/cache@v4
-        with:
-          path: ./**/node_modules
-          key: ${{ runner.os }}-npm-${{ steps.setup-node.outputs.node-version }}-${{ hashFiles('**/package-lock.json') }}
-
-      - run: npm ci
-        if: steps.npm-cache.outputs.cache-hit != 'true'
-
-      - run: npm run lint
-
-      - run: npm run check
   test:
     runs-on: ubuntu-latest
     strategy:
