@@ -30,7 +30,7 @@ jobs:
         with:
           matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
           install-script: npm ci
-          bash-script: |
+          run-script: |
             npm run check
             npm run lint
   check:
