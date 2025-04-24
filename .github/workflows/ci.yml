@@ -67,25 +67,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - id: setup-node
-        uses: kt-actions/setup-node-minmax@v1
+      - uses: kt-actions/npm-run-script@v1
         with:
           matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
-          cache: npm
-          cache-dependency-path: ./**/package-lock.json
-
-      - id: npm-cache
-        uses: actions/cache@v4
-        with:
-          path: ./**/node_modules
-          key: ${{ runner.os }}-npm-${{ steps.setup-node.outputs.node-version }}-${{ hashFiles('**/package-lock.json') }}
-
-      - run: npm ci
-        if: steps.npm-cache.outputs.cache-hit != 'true'
-
-      - run: npm run build
-
-      - run: npm run coverage
+          install-script: npm ci
+          run-script: |
+            npm run build
+            npm run coverage
 
       - uses: sonarsource/sonarqube-scan-action@v5
         env:
