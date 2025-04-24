@@ -24,7 +24,6 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      # Get the maximum node version from vars.NODE_MATRIX, which is a JSON array string
       - uses: actions/checkout@v4
       - uses: kt-public/github-actions/setup-node-latest@v1
         with:
