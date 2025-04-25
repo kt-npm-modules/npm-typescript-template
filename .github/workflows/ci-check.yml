@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        description: 'Conccrete Node.js version to use'
+        type: string
+      matrix-node-version:
+        description: 'Node.js versions to use, json array like in matrix.node-version'
+        type: string
+      check-script:
+        description: 'Check script to run'
+        type: string
+        default: |
+          npm run check
+          npm run lint
+
+permissions:
+  contents: read # to fetch code (actions/checkout)
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: exit 1
+
+      - uses: kt-actions/npm-run-script@v1
+        with:
+          matrix-node-version: ${{ inputs.matrix-node-version }}
+          install-script: npm ci
+          run-script: ${{ inputs.check-script }}
