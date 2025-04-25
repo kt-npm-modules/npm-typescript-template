@@ -20,12 +20,14 @@ jobs:
   #   runs-on: ubuntu-latest
   #   steps:
   #     - run: ${{ tojson(github) }}
-  #       shell: cat {0}x
+  #       shell: cat {0}
   ci:
     uses: kt-workflows/npm-ci/.github/workflows/ci.yml@v1
     with:
       # pass the matrix node version to the called workflow
       matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
+      install-script: npm cixxx
+      check-script: npm run checkxxx
 
   check:
     runs-on: ubuntu-latest
