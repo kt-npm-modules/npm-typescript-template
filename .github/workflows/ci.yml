@@ -26,8 +26,6 @@ jobs:
     with:
       # pass the matrix node version to the called workflow
       matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
-      install-script: npm cixxx
-      check-script: npm run checkxxx
 
   check:
     runs-on: ubuntu-latest
