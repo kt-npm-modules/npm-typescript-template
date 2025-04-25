@@ -11,7 +11,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-permissions: {}
+# permissions:
+#   contents: write # to create release (changesets/action)
+#   id-token: write # OpenID Connect token needed for provenance
+#   pull-requests: write # to create pull request (changesets/action)
+
 jobs:
   # echo:
   #   runs-on: ubuntu-latest
@@ -25,11 +29,7 @@ jobs:
       github.ref == 'refs/heads/main' && 
       github.event.workflow_run.event == 'push' && 
       github.event.workflow_run.conclusion == 'success'
-    permissions:
-      contents: write # to create release (changesets/action)
-      id-token: write # OpenID Connect token needed for provenance
-      pull-requests: write # to create pull request (changesets/action)
-    uses: kt-workflows/npm-release/.github/workflows/release.yml@v1
+    uses: kt-workflows/npm-release/.github/workflows/main.yml@v1
     with:
       matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
     secrets:
