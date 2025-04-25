@@ -6,8 +6,12 @@
 
 # Get all dependencies and devDependencies into one array
 allDependencies=()
-allDependencies+=($(jq -r '.dependencies | keys[]' package.json))
-allDependencies+=($(jq -r '.devDependencies | keys[]' package.json))
+if jq -e '.dependencies' package.json >/dev/null; then
+  allDependencies+=($(jq -r '.dependencies | keys[]' package.json))
+fi
+if jq -e '.devDependencies' package.json >/dev/null; then
+  allDependencies+=($(jq -r '.devDependencies | keys[]' package.json))
+fi
 
 separator="------------------------------------------"
 
