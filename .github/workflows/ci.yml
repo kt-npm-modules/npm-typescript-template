@@ -39,6 +39,7 @@ jobs:
           run-script: |
             npm run check
             npm run lint
+
   test:
     runs-on: ubuntu-latest
     strategy:
@@ -55,17 +56,6 @@ jobs:
             npm run build
             npm test
 
-  codeql:
-    uses: ./.github/workflows/codeql.yml
-    secrets: inherit
-    permissions:
-      # required for all workflows
-      security-events: write
-      # required to fetch internal or private CodeQL packs
-      packages: read
-      # only required for workflows in private repositories
-      actions: read
-      contents: read
   sonar:
     runs-on: ubuntu-latest
     steps:
