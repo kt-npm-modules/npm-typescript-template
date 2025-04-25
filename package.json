@@ -24,10 +24,10 @@
 		"prettier",
 		"changeset"
 	],
-	"homepage": "https://github.com/kt-public/npm-typescript-template#readme",
+	"homepage": "https://github.com/kt-npm-modules/npm-typescript-template#readme",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/kt-public/npm-typescript-template.git"
+		"url": "git+https://github.com/kt-npm-modules/npm-typescript-template.git"
 	},
 	"type": "module",
 	"types": "./dist/index.d.ts",
@@ -61,7 +61,7 @@
 		"!benchmarks"
 	],
 	"bugs": {
-		"url": "https://github.com/kt-public/digraph-js/issues"
+		"url": "https://github.com/kt-npm-modules/npm-typescript-template/issues"
 	},
 	"devDependencies": {
 		"@changesets/cli": "^2.28.1",
