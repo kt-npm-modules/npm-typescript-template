@@ -29,6 +29,9 @@
 		"type": "git",
 		"url": "git+https://github.com/kt-npm-modules/npm-typescript-template.git"
 	},
+	"bugs": {
+		"url": "https://github.com/kt-npm-modules/npm-typescript-template/issues"
+	},
 	"type": "module",
 	"types": "./dist/index.d.ts",
 	"exports": {
@@ -60,9 +63,6 @@
 		"!examples",
 		"!benchmarks"
 	],
-	"bugs": {
-		"url": "https://github.com/kt-npm-modules/npm-typescript-template/issues"
-	},
 	"devDependencies": {
 		"@changesets/cli": "^2.28.1",
 		"@eslint/compat": "^1.2.7",
