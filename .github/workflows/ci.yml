@@ -21,60 +21,10 @@ jobs:
   #   steps:
   #     - run: ${{ tojson(github) }}
   #       shell: cat {0}
-  check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: kt-actions/npm-run-script@v1
-        with:
-          matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
-          install-script: npm ci
-          run-script: |
-            npm run check
-            npm run lint
-  test:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: ${{ fromJson(vars.MATRIX_NODE_VERSION) }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: kt-actions/npm-run-script@v1
-        with:
-          matrix-node-version: '[${{ matrix.node-version }}]'
-          install-script: npm ci
-          run-script: |
-            npm run build
-            npm test
-
-  codeql:
-    uses: ./.github/workflows/codeql.yml
-    secrets: inherit
-    permissions:
-      # required for all workflows
-      security-events: write
-      # required to fetch internal or private CodeQL packs
-      packages: read
-      # only required for workflows in private repositories
-      actions: read
-      contents: read
-  sonar:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - uses: kt-actions/npm-run-script@v1
-        with:
-          matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
-          install-script: npm ci
-          run-script: |
-            npm run build
-            npm run coverage
-
-      - uses: sonarsource/sonarqube-scan-action@v5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  ci:
+    uses: kt-workflows/npm-ci/.github/workflows/ci.yml@v1
+    with:
+      # pass the matrix node version to the called workflow
+      matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
+    secrets:
+      sonar-token: ${{ secrets.SONAR_TOKEN }}
