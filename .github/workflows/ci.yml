@@ -20,7 +20,7 @@ jobs:
   #   runs-on: ubuntu-latest
   #   steps:
   #     - run: ${{ tojson(github) }}
-  #       shell: cat {0}
+  #       shell: cat {0}x
   ci:
     uses: kt-workflows/npm-ci/.github/workflows/ci.yml@v1
     with:
