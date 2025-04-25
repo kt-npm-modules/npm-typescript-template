@@ -6,9 +6,9 @@ on:
     # Just for testing purposes - run every 5 minutes
     # - cron: '*/5 * * * *' # Every 5 minutes
 
-# permissions:
-#   contents: read
-#   pull-requests: write
+permissions:
+  contents: read
+  pull-requests: write
 
 jobs:
   # echo:
