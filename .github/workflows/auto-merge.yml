@@ -11,7 +11,7 @@ jobs:
   #   steps:
   #     - run: ${{ tojson(github) }}
   #       shell: cat {0}
-  dependabot:
+  auto-merge:
     if: github.event.pull_request.user.login == 'dependabot[bot]'
     uses: kt-workflows/dependabot-auto-merge/.github/workflows/dependabot.yml@v1
     secrets:
