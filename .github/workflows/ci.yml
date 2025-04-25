@@ -22,13 +22,10 @@ jobs:
   #     - run: ${{ tojson(github) }}
   #       shell: cat {0}
   call-ci:
-    uses: kt-workflows/npm-ci/.github/workflows/ci.yml@v1
+    uses: kt-workflows/npm-ci/.github/workflows/ci-check.yml@v1
     with:
       # pass the matrix node version to the called workflow
       matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
-      run-sonar: true
-    secrets:
-      sonar-token: ${{ secrets.SONAR_TOKEN }}
 
   check:
     runs-on: ubuntu-latest
