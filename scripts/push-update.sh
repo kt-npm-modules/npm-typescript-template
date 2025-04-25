@@ -7,5 +7,5 @@ MAJOR_TAG=${2:-"v1"}
 
 # Push the changes to the remote repository
 git add .
-git commit -m "$COMMIT_MESSAGE"
+git commit -m "$COMMIT_MESSAGE" --allow-empty
 git push
