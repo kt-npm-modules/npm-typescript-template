@@ -51,5 +51,5 @@ jobs:
       matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
       check-script: ''
       test-script: ''
-    secrets:
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    # secrets:
+    #   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
