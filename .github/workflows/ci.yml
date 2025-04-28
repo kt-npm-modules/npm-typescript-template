@@ -27,7 +27,6 @@ jobs:
     steps:
       - uses: kt-actions/npm-ci-check@v1
         with:
-          # pass the matrix node version to the called workflow
           matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
           cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
 
@@ -43,12 +42,32 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
 
-  ci:
-    uses: kt-workflows/npm-ci/.github/workflows/main.yml@v1
-    with:
-      # pass the matrix node version to the called workflow
-      matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
-      check-script: ''
-      test-script: ''
-    secrets:
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  sonar:
+    runs-on: ubuntu-latest
+    steps:
+      - id: do-sonar
+        run: |
+          if [[ -z "${{ secrets.SONAR_TOKEN }}" ]]; then
+            echo "sonar-token is not set"
+            echo "result=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "sonar-token is set"
+            echo "result=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: kt-actions/npm-ci-sonar@v1
+        if: steps.do-sonar.outputs.result == 'true'
+        with:
+          matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
+          cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
+          sonar-token: ${{ secrets.SONAR_TOKEN }}
+
+  # ci:
+  #   uses: kt-workflows/npm-ci/.github/workflows/main.yml@v1
+  #   with:
+  #     # pass the matrix node version to the called workflow
+  #     matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
+  #     check-script: ''
+  #     test-script: ''
+  #   secrets:
+  #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
