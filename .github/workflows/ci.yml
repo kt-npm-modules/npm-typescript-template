@@ -47,7 +47,7 @@ jobs:
     steps:
       - id: do-sonar
         run: |
-          if [[ -z "${{ secrets.SONAR_TOKEN }}" ]]; then
+          if [[ -z "${{ secrets.SONAR_TOKENX }}" ]]; then
             echo "sonar-token is not set"
             echo "result=false" >> "$GITHUB_OUTPUT"
           else
