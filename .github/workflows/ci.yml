@@ -45,22 +45,12 @@ jobs:
   sonar:
     runs-on: ubuntu-latest
     steps:
-      - id: do-sonar
-        run: |
-          if [[ -z "${{ secrets.SONAR_TOKENX }}" ]]; then
-            echo "sonar-token is not set"
-            echo "result=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "sonar-token is set"
-            echo "result=true" >> "$GITHUB_OUTPUT"
-          fi
-
       - uses: kt-actions/npm-ci-sonar@v1
-        if: steps.do-sonar.outputs.result == 'true'
         with:
           matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
           cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
-          sonar-token: ${{ secrets.SONAR_TOKEN }}
+          sonar-token: ${{ secrets.SONAR_TOKENX }}
+          fail-on-empty-token: true
 
   # ci:
   #   uses: kt-workflows/npm-ci/.github/workflows/main.yml@v1
