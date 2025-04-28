@@ -49,7 +49,7 @@ jobs:
         with:
           matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
           cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
-          sonar-token: ${{ secrets.SONAR_TOKENX }}
+          sonar-token: ${{ secrets.SONAR_TOKEN }}
 
   # ci:
   #   uses: kt-workflows/npm-ci/.github/workflows/main.yml@v1
