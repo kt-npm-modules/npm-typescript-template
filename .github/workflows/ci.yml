@@ -50,7 +50,6 @@ jobs:
           matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
           cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
           sonar-token: ${{ secrets.SONAR_TOKENX }}
-          fail-on-empty-token: true
 
   # ci:
   #   uses: kt-workflows/npm-ci/.github/workflows/main.yml@v1
