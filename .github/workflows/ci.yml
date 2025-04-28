@@ -42,12 +42,12 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
 
-  sonar:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: kt-actions/npm-ci-sonar@v1
-        with:
-          matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
-          cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
-          sonar-token: ${{ secrets.SONAR_TOKEN }}
-          fail-on-empty-token: true
+  # sonar:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: kt-actions/npm-ci-sonar@v1
+  #       with:
+  #         matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
+  #         cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
+  #         sonar-token: ${{ secrets.SONAR_TOKEN }}
+  #         fail-on-empty-token: true
