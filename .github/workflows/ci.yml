@@ -36,5 +36,6 @@ jobs:
     with:
       # pass the matrix node version to the called workflow
       matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
+      check-script: ''
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
