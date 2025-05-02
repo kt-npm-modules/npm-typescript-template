@@ -37,20 +37,16 @@ jobs:
       matrix:
         node-version: ${{ fromJson(vars.MATRIX_NODE_VERSION) }}
     steps:
-      - uses: kt-workflows/actions/npm-ci-test@main
-        with:
-          # pass the matrix node version to the called workflow
-          node-version: ${{ matrix.node-version }}
-          cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
-          # cache-reset: true
-
-  sonar:
-    runs-on: ubuntu-latest
-    steps:
+      # Sonar runs the tests with coverage, use this instead of npm-ci-test
       - uses: kt-workflows/actions/npm-ci-sonar@main
         with:
           matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
           sonar-token: ${{ secrets.SONAR_TOKEN }}
           fail-on-empty-token: true
           cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
-          # cache-reset: true
+      # - uses: kt-workflows/actions/npm-ci-test@main
+      #   with:
+      #     # pass the matrix node version to the called workflow
+      #     node-version: ${{ matrix.node-version }}
+      #     cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
+      #     # cache-reset: true
