@@ -11,9 +11,9 @@ inputs:
     required: false
     default: '${{ github.token }}'
 outputs:
-  commit:
+  success-commit:
     description: 'The commit SHA of the last successful run.'
-    value: ${{ steps.check.outputs.commit }}
+    value: ${{ steps.check.outputs.success-commit }}
   has-changes:
     description: 'Whether there are changes since the last successful run.'
     value: ${{ steps.check-changes.outputs.has_changes }}
@@ -32,8 +32,8 @@ runs:
         # gh run list --workflow ${{ github.workflow }} --branch "$branch_name" --status success --limit 1 --json status,conclusion,headSha
         last_successful_run=$(gh run list --workflow ${{ github.workflow }} --branch "$branch_name" --status success --limit 1 --json databaseId,status,conclusion,headSha -q '.[] | select(.databaseId != null) | .headSha')
         echo "last_successful_run: $last_successful_run"
+        echo "success-commit=$last_successful_run" >> "$GITHUB_OUTPUT"
 
-        # echo "commit=$last_successful_run" >> "$GITHUB_OUTPUT"
         # has_changes=$(git diff --quiet $last_successful_run ${{ inputs.working-directory }} || echo true)
         # if [ "$has_changes" = "true" ]; then
         #   echo "Changes detected since last successful run."
