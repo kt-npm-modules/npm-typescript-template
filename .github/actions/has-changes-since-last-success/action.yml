@@ -42,7 +42,7 @@ runs:
         #   echo "has_changes=false" >> "$GITHUB_OUTPUT"
         # fi
 
-        echo "success_commit=$success_commit" >> "$GITHUB_OUTPUT"
+        # echo "success_commit=$success_commit" >> "$GITHUB_OUTPUT"
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
         GH_TOKEN: ${{ inputs.github-token }}
