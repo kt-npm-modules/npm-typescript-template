@@ -19,7 +19,9 @@ runs:
       shell: bash
       run: |
         # Get the last successful run for the current workflow
-        gh run list --workflow ${{ github.workflow }} --status success --limit 1
+        branch_name=$(git rev-parse --abbrev-ref HEAD)
+        echo "Branch name: $branch_name"
+        gh run list --workflow ${{ github.workflow }} --branch "$branch_name" --status success --limit 1
         gh run list --workflow ${{ github.workflow }} --status success --limit 1 --json status,databaseId,headSha
         last_successful_run=$(gh run list --workflow ${{ github.workflow }} --status success --limit 1 --json status,databaseId,headSha -q '.[] | select(.databaseId != null) | .headSha')
 
