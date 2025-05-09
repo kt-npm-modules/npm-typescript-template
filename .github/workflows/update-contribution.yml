@@ -1,0 +1,26 @@
+name: UPDATE-CONTRIBUTION
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-pull:
+    runs-on: ubuntu-latest
+    steps:
+      # We need to overwrite the branch 'pull' with the state of the branch 'main'
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git user
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Force update 'contribution' branch
+        run: |
+          git checkout -B contribution
+          git push origin contribution --force
