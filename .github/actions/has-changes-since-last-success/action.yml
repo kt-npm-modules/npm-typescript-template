@@ -10,6 +10,13 @@ inputs:
     description: 'GitHub token to use for authentication.'
     required: false
     default: '${{ github.token }}'
+outputs:
+  commit:
+    description: 'The commit SHA of the last successful run.'
+    value: ${{ steps.last-successful-run.outputs.commit }}
+  changes:
+    description: 'Whether there are changes since the last successful run.'
+    value: ${{ steps.check-changes.outputs.changes }}
 
 runs:
   using: 'composite'
