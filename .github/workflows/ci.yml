@@ -34,7 +34,7 @@ jobs:
         id: check-changes
         uses: ./.github/actions/has-changes-since-last-success
         with:
-          working-directory: '.'
+          working-directory: subpackage
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
   check:
