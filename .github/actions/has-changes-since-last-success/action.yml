@@ -51,3 +51,4 @@ runs:
           echo "Changes detected since last successful run."
           echo "changes=true" >> "$GITHUB_OUTPUT"
         fi
+      continue-on-error: true
