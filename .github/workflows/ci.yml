@@ -27,7 +27,7 @@ jobs:
     steps:
       - name: Check for changes since last success
         id: check-changes
-        uses: ./.workflows/actions/has-changes-since-last-success
+        uses: ./.github/actions/has-changes-since-last-success
         with:
           working-directory: '.'
           github-token: ${{ secrets.GITHUB_TOKEN }}
