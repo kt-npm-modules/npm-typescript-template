@@ -22,7 +22,7 @@ jobs:
   #   steps:
   #     - run: ${{ tojson(github) }}
   #       shell: cat {0}
-  last-successful-run:
+  ci-subpackage:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,13 +33,9 @@ jobs:
       - id: check-changes
         uses: ./.github/actions/has-changes-since-last-success
         with:
-          working-directory: subpackage
+          paths: >-
+            subpackage
           # github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - run: |
-          echo "Last successful commit: ${{ steps.check-changes.outputs.success-commit }}"
-          echo "Has changes since last successful run: ${{ steps.check-changes.outputs.has-changes }}"
-        shell: bash
 
       - run: subpackage/test.sh
         shell: bash
