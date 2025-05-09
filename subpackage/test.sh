@@ -2,5 +2,5 @@
 
 echo "Running test script in subpackage"
 
-exit 1 # Uncomment this line to simulate a failure
+# exit 1 # Uncomment this line to simulate a failure
 
