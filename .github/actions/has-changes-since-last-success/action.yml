@@ -34,14 +34,13 @@ runs:
         echo "success_commit: $success_commit"
         echo "success_commit=$success_commit" >> "$GITHUB_OUTPUT"
         has_changes=$(git diff --quiet $success_commit ${{ inputs.working-directory }} || echo true)
-
-        # if [ "$has_changes" = "true" ]; then
-        #   echo "Changes detected since last successful run."
-        #   echo "changes=true" >> "$GITHUB_OUTPUT"
-        # else
-        #   echo "No changes since last successful run."
-        #   echo "changes=false" >> "$GITHUB_OUTPUT"
-        # fi
+        if [ "$has_changes" = "true" ]; then
+          echo "Changes detected since last successful run."
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "No changes since last successful run."
+          echo "has_changes=false" >> "$GITHUB_OUTPUT"
+        fi
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
         GH_TOKEN: ${{ inputs.github-token }}
