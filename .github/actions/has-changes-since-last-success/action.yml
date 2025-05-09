@@ -8,8 +8,7 @@ inputs:
     default: '.'
   github-token:
     description: 'GitHub token to use for authentication.'
-    required: false
-    default: '${{ secrets.GITHUB_TOKEN }}'
+    required: true
 
 runs:
   using: 'composite'
@@ -28,4 +27,6 @@ runs:
         fi
 
         echo "Last successful run SHA: $last_successful_run"
-        echo "::set-output name=last-successful-run::$last_successful_run"
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        GH_TOKEN: ${{ inputs.github-token }}
