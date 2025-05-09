@@ -33,7 +33,7 @@ runs:
         success_commit=$(gh run list --workflow ${{ github.workflow }} --branch "$branch_name" --status success --limit 1 --json databaseId,status,conclusion,headSha -q '.[] | select(.databaseId != null) | .headSha')
         echo "success_commit: $success_commit"
         echo "success_commit=$success_commit" >> "$GITHUB_OUTPUT"
-        has_changes=$(git diff --quiet $last_successful_run ${{ inputs.working-directory }} || echo true)
+        has_changes=$(git diff --quiet $success_commit ${{ inputs.working-directory }} || echo true)
 
         # if [ "$has_changes" = "true" ]; then
         #   echo "Changes detected since last successful run."
