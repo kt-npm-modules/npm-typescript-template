@@ -22,8 +22,8 @@ runs:
         branch_name=$(git rev-parse --abbrev-ref HEAD)
         echo "Branch name: $branch_name"
         gh run list --workflow ${{ github.workflow }} --branch "$branch_name" --status success --limit 1
-        gh run list --workflow ${{ github.workflow }} --branch "$branch_name" --status success --limit 1 --json
-        last_successful_run=$(gh run list --workflow ${{ github.workflow }} --status success --limit 1 --json status,databaseId,headSha -q '.[] | select(.databaseId != null) | .headSha')
+        gh run list --workflow ${{ github.workflow }} --branch "$branch_name" --status success --limit 1 --json status,conclusion,headSha
+        last_successful_run=$(gh run list --workflow ${{ github.workflow }} --status success --limit 1 --json status,headSha -q '.[] | select(.databaseId != null) | .headSha')
 
         # Check if a successful run was found
         if [ -z "$last_successful_run" ]; then
