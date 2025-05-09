@@ -2,13 +2,14 @@ name: Check for changes since last success
 description: Check if there are changes since the last successful commit in a working directory.
 
 inputs:
-  working-directory:
-    description: 'The working directory to check for changes.'
-    required: true
+  paths:
+    description: 'Paths to check for changes. .github/workflows is always included.'
     default: '.'
+  override-paths:
+    description: 'Override paths to check for changes. Override paths take precedence over paths and inclusion of .github/workflows.'
+    default: ''
   github-token:
     description: 'GitHub token to use for authentication.'
-    required: false
     default: '${{ github.token }}'
 outputs:
   success-commit:
@@ -31,7 +32,17 @@ runs:
         success_commit=$(gh run list --workflow ${{ github.workflow }} --branch "$branch_name" --status success --limit 1 --json databaseId,status,conclusion,headSha -q '.[] | select(.databaseId != null) | .headSha')
         echo "success_commit: $success_commit"
         echo "success_commit=$success_commit" >> "$GITHUB_OUTPUT"
-        has_changes=$(git diff --quiet $success_commit ${{ inputs.working-directory }} || echo true)
+        if [ -z "$success_commit" ]; then
+          echo "No successful commit found."
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+        if [ -z "${{ inputs.override-paths }}" ]; then
+          check_paths=".github/workflows ${{ inputs.paths }}"
+        else
+          check_paths="${{ inputs.override-paths }}"
+        fi
+        has_changes=$(git diff --quiet $success_commit $check_paths || echo true)
         if [ "$has_changes" = "true" ]; then
           echo "Changes detected since last successful run."
           echo "has_changes=true" >> "$GITHUB_OUTPUT"
