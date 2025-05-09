@@ -16,18 +16,21 @@ jobs:
   update-pull:
     runs-on: ubuntu-latest
     steps:
-      # We need to overwrite the branch 'pull' with the state of the branch 'main'
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - id: app-token
+        uses: kt-workflows/actions/create-github-app-token@main
         with:
-          fetch-depth: 0
+          app-id: ${{ secrets.WORKFLOW_APP_ID }}
+          private-key: ${{ secrets.WORKFLOW_APP_PRIVATE_KEY }}
+          configure-git: true
+          # Default to github token if secrets are not provided
+          default-to-github-token: true
 
-      - name: Configure Git user
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
 
-      - name: Force update 'contribution' branch
+      - name: Merge 'main' into 'contribution' branch
         run: |
-          git checkout -B contribution
-          git push origin contribution --force
+          git checkout contribution || git checkout -b contribution
+          git merge main
+          git push origin contribution
