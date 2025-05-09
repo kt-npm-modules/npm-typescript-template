@@ -22,6 +22,15 @@ jobs:
   #   steps:
   #     - run: ${{ tojson(github) }}
   #       shell: cat {0}
+  last-successful-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for changes since last success
+        id: check-changes
+        uses: ./.workflows/actions/actions/has-changes-since-last-success
+        with:
+          working-directory: '.'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
   check:
     runs-on: ubuntu-latest
     steps:
