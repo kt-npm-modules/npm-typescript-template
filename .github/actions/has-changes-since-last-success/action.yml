@@ -8,7 +8,8 @@ inputs:
     default: '.'
   github-token:
     description: 'GitHub token to use for authentication.'
-    required: true
+    required: false
+    default: '${{ github.token }}'
 
 runs:
   using: 'composite'
@@ -18,6 +19,9 @@ runs:
       shell: bash
       run: |
         # Get the last successful run for the current workflow
+        gh run list --workflow ${{ github.workflow }}
+        run list --workflow ${{ github.workflow }} --status success
+        gh run list --workflow ${{ github.workflow }} --status success --limit 1
         last_successful_run=$(gh run list --workflow ${{ github.workflow }} --status success --limit 1 --json databaseId,headSha -q '.[] | select(.databaseId != null) | .headSha')
 
         # Check if a successful run was found
