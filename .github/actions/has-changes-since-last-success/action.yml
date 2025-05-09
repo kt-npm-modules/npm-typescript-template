@@ -13,10 +13,10 @@ inputs:
 outputs:
   success-commit:
     description: 'The commit SHA of the last successful run.'
-    value: ${{ steps.check.outputs.success_commit }}
+    value: ${{ steps.changes.outputs.success_commit }}
   has-changes:
     description: 'Whether there are changes since the last successful run.'
-    value: ${{ steps.check-changes.outputs.has_changes }}
+    value: ${{ steps.changes.outputs.has_changes }}
 
 runs:
   using: 'composite'
