@@ -30,17 +30,17 @@ runs:
         # echo "Branch name: $branch_name"
         # gh run list --workflow ${{ github.workflow }} --branch "$branch_name" --status success --limit 1
         # gh run list --workflow ${{ github.workflow }} --branch "$branch_name" --status success --limit 1 --json status,conclusion,headSha
-        last_successful_run=$(gh run list --workflow ${{ github.workflow }} --branch "$branch_name" --status success --limit 1 --json databaseId,status,conclusion,headSha -q '.[] | select(.databaseId != null) | .headSha')
-        echo "last_successful_run: $last_successful_run"
+        # last_successful_run=$(gh run list --workflow ${{ github.workflow }} --branch "$branch_name" --status success --limit 1 --json databaseId,status,conclusion,headSha -q '.[] | select(.databaseId != null) | .headSha')
+        # echo "last_successful_run: $last_successful_run"
         # echo "commit=$last_successful_run" >> "$GITHUB_OUTPUT"
-        has_changes=$(git diff --quiet $last_successful_run ${{ inputs.working-directory }} || echo true)
-        if [ "$has_changes" = "true" ]; then
-          echo "Changes detected since last successful run."
-          echo "changes=true" >> "$GITHUB_OUTPUT"
-        else
-          echo "No changes since last successful run."
-          echo "changes=false" >> "$GITHUB_OUTPUT"
-        fi
+        # has_changes=$(git diff --quiet $last_successful_run ${{ inputs.working-directory }} || echo true)
+        # if [ "$has_changes" = "true" ]; then
+        #   echo "Changes detected since last successful run."
+        #   echo "changes=true" >> "$GITHUB_OUTPUT"
+        # else
+        #   echo "No changes since last successful run."
+        #   echo "changes=false" >> "$GITHUB_OUTPUT"
+        # fi
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
         GH_TOKEN: ${{ inputs.github-token }}
