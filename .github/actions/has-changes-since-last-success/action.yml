@@ -42,6 +42,7 @@ runs:
         else
           check_paths="${{ inputs.override-paths }}"
         fi
+        git diff $success_commit $check_paths
         has_changes=$(git diff --quiet $success_commit $check_paths || echo true)
         if [ "$has_changes" = "true" ]; then
           echo "Changes detected since last successful run in: $check_paths"
