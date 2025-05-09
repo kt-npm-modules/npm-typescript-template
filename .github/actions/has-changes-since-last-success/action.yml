@@ -14,6 +14,7 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    # Get the last successful run for the current workflow on the current branch
     - id: last-successful-run
       shell: bash
       run: |
@@ -28,3 +29,18 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
         GH_TOKEN: ${{ inputs.github-token }}
+
+    # Check if there are changes in the working directory since the last successful run
+    - id: check-changes
+      shell: bash
+      run: |
+        # Check if there are changes in the working directory since the last successful run
+        git diff --quiet ${{ steps.last-successful-run.outputs.commit }} -- ${{ inputs.working-directory }}
+        git diff --quiet ${{ steps.last-successful-run.outputs.commit }} -- ${{ inputs.working-directory }}
+        if [ $? -eq 0 ]; then
+          echo "No changes since last successful run."
+          echo "changes=false" >> "$GITHUB_OUTPUT"
+        else
+          echo "Changes detected since last successful run."
+          echo "changes=true" >> "$GITHUB_OUTPUT"
+        fi
