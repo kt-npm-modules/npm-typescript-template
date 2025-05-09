@@ -35,7 +35,7 @@ jobs:
         uses: ./.github/actions/has-changes-since-last-success
         with:
           working-directory: subpackage
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - run: subpackage/test.sh
         shell: bash
