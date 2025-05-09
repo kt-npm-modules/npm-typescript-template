@@ -26,9 +26,13 @@ echo -e "Checking for linked packages from dependencies and devDependencies..."
 #  example output per package: typesafe-utilities@0.2.2 -> ./../../../../../SAPDevelop/git/personal/VolksRebal/typesafe-utilities
 #  We extract only the package name `typesafe-utilities`
 available_global_link_packages=$(
+  # Get the list of globally linked packages
   npm ls -g --depth=0 --link=true 2>/dev/null | \
+  # Filter out the lines that contain the package name and version
   awk -F ' -> ' '/ -> / {print $1}' | \
-  awk -F '@' '{print $1}' | \
+  # Remove the version number and keep only the package name
+  awk -F '@' '{print $1 "@" $2}' | \
+  # Remove prefix like '└── ' or '├── ' before the package name
   sed 's/^[^ ]* //g' | \
   # remove duplicates
   sort -u | \
