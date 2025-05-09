@@ -44,10 +44,10 @@ runs:
         fi
         has_changes=$(git diff --quiet $success_commit $check_paths || echo true)
         if [ "$has_changes" = "true" ]; then
-          echo "Changes detected since last successful run."
+          echo "Changes detected since last successful run in: $check_paths"
           echo "has_changes=true" >> "$GITHUB_OUTPUT"
         else
-          echo "No changes since last successful run."
+          echo "No changes since last successful run in: $check_paths"
           echo "has_changes=false" >> "$GITHUB_OUTPUT"
         fi
 
