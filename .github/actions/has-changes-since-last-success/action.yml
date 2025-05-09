@@ -1,12 +1,12 @@
 name: Check for changes since last success
-description: Check if there are changes since the last successful commit in a working directory.
+description: Check if there are changes since the last successful commit in specified paths.
 
 inputs:
   paths:
-    description: 'Paths to check for changes. .github/workflows is always included.'
+    description: 'Paths to check for changes. .github is always included.'
     default: '.'
   override-paths:
-    description: 'Override paths to check for changes. Override paths take precedence over paths and inclusion of .github/workflows.'
+    description: 'Override paths to check for changes. Override paths take precedence over paths and inclusion of .github.'
     default: ''
   github-token:
     description: 'GitHub token to use for authentication.'
@@ -38,7 +38,7 @@ runs:
           exit 0
         fi
         if [ -z "${{ inputs.override-paths }}" ]; then
-          check_paths=".github/workflows ${{ inputs.paths }}"
+          check_paths=".github ${{ inputs.paths }}"
         else
           check_paths="${{ inputs.override-paths }}"
         fi
