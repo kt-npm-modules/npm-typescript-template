@@ -39,7 +39,7 @@ jobs:
 
       - run: subpackage/test.sh
         shell: bash
-        # if: steps.check-changes.outputs.changes == 'true'
+        if: steps.check-changes.outputs.changes == 'true'
 
   check:
     runs-on: ubuntu-latest
