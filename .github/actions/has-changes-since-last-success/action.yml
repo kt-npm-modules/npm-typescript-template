@@ -42,7 +42,7 @@ runs:
       shell: bash
       run: |
         # Check if there are changes in the working directory since the last successful run
-        git diff --quiet ${{ steps.last-successful-run.outputs.commit }} -- ${{ inputs.working-directory }}
+        git diff ${{ steps.last-successful-run.outputs.commit }} -- ${{ inputs.working-directory }}
         git diff --quiet ${{ steps.last-successful-run.outputs.commit }} -- ${{ inputs.working-directory }}
         if [ $? -eq 0 ]; then
           echo "No changes since last successful run."
@@ -51,3 +51,4 @@ runs:
           echo "Changes detected since last successful run."
           echo "changes=true" >> "$GITHUB_OUTPUT"
         fi
+      continue-on-error: true
