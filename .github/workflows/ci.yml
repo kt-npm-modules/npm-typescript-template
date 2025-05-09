@@ -37,6 +37,10 @@ jobs:
           working-directory: subpackage
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      - run: subpackage/test.sh
+        shell: bash
+        # if: steps.check-changes.outputs.changes == 'true'
+
   check:
     runs-on: ubuntu-latest
     steps:
