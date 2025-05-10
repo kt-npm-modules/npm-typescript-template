@@ -50,6 +50,8 @@ runs:
           echo "Unsupported event type: ${{ github.event_name }}"
           exit 1
         fi
+        echo "Determined repo: $repo_name"
+        echo "Determined branch: $branch_name"
         echo "branch_name=$branch_name" >> "$GITHUB_OUTPUT"
         echo "repo_name=$repo_name" >> "$GITHUB_OUTPUT"
 
