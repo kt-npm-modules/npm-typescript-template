@@ -79,6 +79,10 @@ runs:
         exit 1
         # success_commit=$(gh run list --workflow ${{ github.workflow }} --status success --limit 1 --json databaseId,headBranch,status,conclusion,headSha -q '.[] | select(.databaseId != null && .headBranch == "$head_branch") | .headSha')
         # echo "success_commit=$success_commit" >> "$GITHUB_OUTPUT"
+      working-directory: ${{ steps.temp_dir.outputs.temp_dir }}
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        GH_TOKEN: ${{ inputs.github-token }}
 
     # - uses: actions/checkout@v2
     #   with:
