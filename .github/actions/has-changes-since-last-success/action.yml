@@ -26,79 +26,127 @@ runs:
     - id: temp_dir
       shell: bash
       run: |
-        # Create a temporary directory to avoid issues with the default checkout
-        temp_dir=$(mktemp -d)
+        # generate a temporary directory name
+        temp_dir=".last_success_check_$(date +%s%N)"
+        echo "Creating temporary directory: $temp_dir"
+        mkdir -p "$temp_dir"
         echo "temp_dir=$temp_dir" >> "$GITHUB_OUTPUT"
 
     # Determine what we need to check out
     # It could be the push event or a pull request
     # If it's a pull request, we need to check out the source (head) branch
     # If it's a push event, we need to check out the target (base) branch
-    - id: checkout
+    - id: config
       shell: bash
       run: |
         # Check if the event is a pull request
         if [ "${{ github.event_name }}" == "pull_request" ]; then
-          # Get the base branch name from the pull request event
-          branch_name="${{ github.event.pull_request.base.ref }}"
-          repo_name="${{ github.event.pull_request.base.repo.full_name }}"
-        else if [ "${{ github.event_name }}" == "push" ]; then
-          # For push events, use the current branch
-          branch_name="${{ github.ref }}"
-          repo_name="${{ github.repository }}"
+          echo "Event is a pull request"
+          target_branch_name="${{ github.event.pull_request.base.ref }}"
+          source_repo_name="${{ github.event.pull_request.head.repo.full_name }}"
+          source_branch_name="${{ github.event.pull_request.head.ref }}"
+        elif [ "${{ github.event_name }}" == "push" ]; then
+          echo "Event is a push"
+          target_branch_name="${{ github.ref_name }}"
+          source_repo_name="${{ github.repository }}"
+          source_branch_name="${{ github.ref_name }}"
         else
           echo "Unsupported event type: ${{ github.event_name }}"
           exit 1
         fi
-        echo "branch_name=$branch_name" >> "$GITHUB_OUTPUT"
-        echo "repo_name=$repo_name" >> "$GITHUB_OUTPUT"
+        echo "Target branch name: $target_branch_name"
+        echo "Source repo: $repo_name"
+        echo "Source branch: $branch_name"
+        echo "target_branch_name=$target_branch_name" >> "$GITHUB_OUTPUT"
+        echo "source_branch_name=$source_branch_name" >> "$GITHUB_OUTPUT"
+        echo "source_repo_name=$source_repo_name" >> "$GITHUB_OUTPUT"
+      working-directory: ${{ steps.temp_dir.outputs.temp_dir }}
+
+    # Check out the repository
+    # Combine the repository name and branch name from the previous step
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        path: ${{ steps.temp_dir.outputs.temp_dir }}
+        token: ${{ inputs.github-token }}
+
+    - id: commits
+      shell: bash
+      run: |
+        # print current branch name
+        branch_name=$(git rev-parse --abbrev-ref HEAD)
+        # Get the list of commit SHAs for the current branch
+        COMMITS=$(git rev-list $branch_name)
+        echo "Number of commits in the current branch: $(echo "$COMMITS" | wc -l)"
+        COMMITS_JSON=$(echo "$COMMITS" | jq -R -s -c 'split("\n")[:-1]')
+        echo "commits_json=$COMMITS_JSON" >> "$GITHUB_OUTPUT"
+      working-directory: ${{ steps.temp_dir.outputs.temp_dir }}
 
     # Determine last successful run for the current workflow
     - id: last_success
       shell: bash
       run: |
-        # Get the last successful run for the current workflow
-        head_branch="${{ github.head_ref }}"
-        success_commit=$(gh run list --workflow ${{ github.workflow }} --branch "$branch_name" --status success --limit 1 --json databaseId,status,conclusion,headSha -q '.[] | select(.databaseId != null) | .headSha')
-        echo "success_commit=$success_commit" >> "$GITHUB_OUTPUT"
-
-    - uses: actions/checkout@v2
-      with:
-        path: ${{ steps.temp_dir.outputs.temp_dir }}
-        ref: ${{ github.ref }}
-        fetch-depth: 0
-
-    # Get the last successful run for the current workflow on the current branch
-    - id: changes
-      shell: bash
+        # Get the last successful run for the current workflow with the list of commits
+        gh run list \
+          --workflow ${{ github.workflow }} \
+          --event ${{ github.event_name }} \
+          --branch ${{ steps.config.outputs.target_branch_name }} \
+          --status success \
+          --limit 1 \
+          --json databaseId,headBranch,status,conclusion,headSha \
+          -q '.[] | select(.databaseId != null) | select(.headSha | IN (${{ steps.commits.outputs.commits_json }}[])) | .headSha'
+        commit_sha=$(gh run list \
+          --workflow ${{ github.workflow }} \
+          --event ${{ github.event_name }} \
+          --branch ${{ steps.config.outputs.target_branch_name }} \
+          --status success \
+          --limit 1 \
+          --json databaseId,headBranch,status,conclusion,headSha \
+          -q '.[] | select(.databaseId != null) | select(.headSha | IN (${{ steps.commits.outputs.commits_json }}[])) | .headSha')
+        echo "Last successfull commit: $commit_sha"
+        echo "commit_sha=$commit_sha" >> "$GITHUB_OUTPUT"
       working-directory: ${{ steps.temp_dir.outputs.temp_dir }}
-      run: |
-        # get branch name we are on
-        branch_name=$(git rev-parse --abbrev-ref HEAD)
-        # Get the last successful run for the current workflow
-        success_commit=$(gh run list --workflow ${{ github.workflow }} --branch "$branch_name" --status success --limit 1 --json databaseId,status,conclusion,headSha -q '.[] | select(.databaseId != null) | .headSha')
-        echo "success_commit: $success_commit"
-        echo "success_commit=$success_commit" >> "$GITHUB_OUTPUT"
-        if [ -z "$success_commit" ]; then
-          echo "No successful commit found."
-          echo "has_changes=true" >> "$GITHUB_OUTPUT"
-          exit 0
-        fi
-        if [ -z "${{ inputs.override-paths }}" ]; then
-          check_paths=".github ${{ inputs.paths }}"
-        else
-          check_paths="${{ inputs.override-paths }}"
-        fi
-        git diff $success_commit $check_paths
-        has_changes=$(git diff --quiet $success_commit $check_paths || echo true)
-        if [ "$has_changes" = "true" ]; then
-          echo "Changes detected since last successful run in: $check_paths"
-          echo "has_changes=true" >> "$GITHUB_OUTPUT"
-        else
-          echo "No changes since last successful run in: $check_paths"
-          echo "has_changes=false" >> "$GITHUB_OUTPUT"
-        fi
-
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
         GH_TOKEN: ${{ inputs.github-token }}
+
+    # - uses: actions/checkout@v2
+    #   with:
+    #     path: ${{ steps.temp_dir.outputs.temp_dir }}
+    #     ref: ${{ github.ref }}
+    #     fetch-depth: 0
+
+    # # Get the last successful run for the current workflow on the current branch
+    # - id: changes
+    #   shell: bash
+    #   working-directory: ${{ steps.temp_dir.outputs.temp_dir }}
+    #   run: |
+    #     # get branch name we are on
+    #     branch_name=$(git rev-parse --abbrev-ref HEAD)
+    #     # Get the last successful run for the current workflow
+    #     success_commit=$(gh run list --workflow ${{ github.workflow }} --branch "$branch_name" --status success --limit 1 --json databaseId,status,conclusion,headSha -q '.[] | select(.databaseId != null) | .headSha')
+    #     echo "success_commit: $success_commit"
+    #     echo "success_commit=$success_commit" >> "$GITHUB_OUTPUT"
+    #     if [ -z "$success_commit" ]; then
+    #       echo "No successful commit found."
+    #       echo "has_changes=true" >> "$GITHUB_OUTPUT"
+    #       exit 0
+    #     fi
+    #     if [ -z "${{ inputs.override-paths }}" ]; then
+    #       check_paths=".github ${{ inputs.paths }}"
+    #     else
+    #       check_paths="${{ inputs.override-paths }}"
+    #     fi
+    #     git diff $success_commit $check_paths
+    #     has_changes=$(git diff --quiet $success_commit $check_paths || echo true)
+    #     if [ "$has_changes" = "true" ]; then
+    #       echo "Changes detected since last successful run in: $check_paths"
+    #       echo "has_changes=true" >> "$GITHUB_OUTPUT"
+    #     else
+    #       echo "No changes since last successful run in: $check_paths"
+    #       echo "has_changes=false" >> "$GITHUB_OUTPUT"
+    #     fi
+
+    #   env:
+    #     GITHUB_TOKEN: ${{ inputs.github-token }}
+    #     GH_TOKEN: ${{ inputs.github-token }}

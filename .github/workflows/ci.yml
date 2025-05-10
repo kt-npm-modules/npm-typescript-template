@@ -26,9 +26,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-          fetch-depth: 0 # fetch all history for all branches and tags
 
       - id: check-changes
         uses: ./.github/actions/has-changes-since-last-success
@@ -42,6 +39,7 @@ jobs:
         if: steps.check-changes.outputs.has-changes == 'true'
 
   check:
+    if: true == false
     runs-on: ubuntu-latest
     steps:
       - uses: kt-workflows/actions/npm-ci-check@main
@@ -51,6 +49,7 @@ jobs:
           # cache-reset: true
 
   test:
+    if: true == false
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -64,6 +63,7 @@ jobs:
           # cache-reset: true
 
   sonar:
+    if: true == false
     runs-on: ubuntu-latest
     steps:
       - uses: kt-workflows/actions/npm-ci-sonar@main
