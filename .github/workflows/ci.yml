@@ -17,11 +17,30 @@ permissions:
   actions: write # to delete cache (actions/cache)
 
 jobs:
-  # echo:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - run: ${{ tojson(github) }}
-  #       shell: cat {0}
+  echo:
+    runs-on: ubuntu-latest
+    steps:
+      - run: ${{ tojson(github) }}
+        shell: cat {0}
+  ci-subpackage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0 # fetch all history for all branches and tags
+
+      - id: check-changes
+        uses: ./.github/actions/has-changes-since-last-success
+        with:
+          paths: >-
+            subpackage
+          # github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: subpackage/test.sh
+        shell: bash
+        if: steps.check-changes.outputs.has-changes == 'true'
+
   check:
     runs-on: ubuntu-latest
     steps:
