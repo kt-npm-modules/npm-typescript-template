@@ -58,6 +58,7 @@ runs:
         echo "Determined source branch: $branch_name"
         echo "branch_name=$branch_name" >> "$GITHUB_OUTPUT"
         echo "repo_name=$repo_name" >> "$GITHUB_OUTPUT"
+      working-directory: ${{ steps.temp_dir.outputs.temp_dir }}
 
     # Check out the repository
     # Combine the repository name and branch name from the previous step
@@ -77,6 +78,7 @@ runs:
         echo "Commits in the current branch: $COMMITS"
         COMMITS_JSON=$(echo "$COMMITS" | jq -R -s -c 'split("\n")[:-1]')
         echo "commits_json=$COMMITS_JSON" >> "$GITHUB_OUTPUT"
+      working-directory: ${{ steps.temp_dir.outputs.temp_dir }}
 
     # Determine last successful run for the current workflow
     - id: last_success
