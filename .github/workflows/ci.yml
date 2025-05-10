@@ -29,10 +29,10 @@ jobs:
 
       - id: check-changes
         uses: ./.github/actions/has-changes-since-last-success
-        with:
-          paths: >-
-            subpackage
-          # github-token: ${{ secrets.GITHUB_TOKEN }}
+        # with:
+        #   paths: >-
+        #     subpackage
+        # github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - run: subpackage/test.sh
         shell: bash
