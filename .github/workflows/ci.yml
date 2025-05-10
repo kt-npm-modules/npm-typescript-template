@@ -25,6 +25,8 @@ jobs:
   ci-subpackage:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - id: check-changes
         uses: ./.github/actions/has-changes-since-last-success
         with:
