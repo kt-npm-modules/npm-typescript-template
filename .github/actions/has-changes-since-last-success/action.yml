@@ -47,7 +47,7 @@ runs:
           source_branch_name="${{ github.event.pull_request.head.ref }}"
         elif [ "${{ github.event_name }}" == "push" ]; then
           echo "Event is a push"
-          target_branch_name="${{ github.event.ref }}"
+          target_branch_name="${{ github.ref_name }}"
           source_repo_name="${{ github.repository }}"
           source_branch_name="${{ github.ref_name }}"
         else
