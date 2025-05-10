@@ -86,6 +86,7 @@ runs:
     - id: last_success
       shell: bash
       run: |
+        git log
         # Get the last successful run for the current workflow with the list of commits
         gh run list \
           --workflow ${{ github.workflow }} \
