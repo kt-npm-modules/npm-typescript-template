@@ -5,6 +5,7 @@
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=kt-npm-modules_npm-typescript-template&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=kt-npm-modules_npm-typescript-template)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=kt-npm-modules_npm-typescript-template&metric=coverage)](https://sonarcloud.io/summary/new_code?id=kt-npm-modules_npm-typescript-template)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=kt-npm-modules_npm-typescript-template&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=kt-npm-modules_npm-typescript-template)
+[![Socket Badge](https://socket.dev/api/badge/npm/package/@ktarmyshov/npm-typescript-template)](https://socket.dev/npm/package/@ktarmyshov/npm-typescript-template/overview)
 
 # npm-typescript-template
 
