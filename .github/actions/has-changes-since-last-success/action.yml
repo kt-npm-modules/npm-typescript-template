@@ -91,6 +91,8 @@ runs:
           --workflow ${{ github.workflow }} \
           --event ${{ github.event_name }} \
           --branch ${{ steps.config.outputs.target_branch_name }} \
+          --status success \
+          --limit 1 \
           --json databaseId,headBranch,status,conclusion,headSha \
           -q '.[] | select(.databaseId != null) | select(.headSha | IN (${{ steps.commits.outputs.commits_json }}[])) | .headSha' \
           > "$GITHUB_OUTPUT"
