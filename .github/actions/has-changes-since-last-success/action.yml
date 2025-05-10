@@ -75,7 +75,9 @@ runs:
       run: |
         # Get the list of commit SHAs for the current branch
         COMMITS=$(git rev-list ${{ steps.checkout.outputs.branch_name }})
+        echo "Commits in the current branch: $COMMITS"
         COMMITS_JSON=$(echo "$COMMITS" | jq -R -s -c 'split("\n")[:-1]')
+        echo "Commits JSON: $COMMITS_JSON"
         gh run list --workflow ${{ github.workflow }} --event ${{ github.event_name }} --branch ${{ steps.checkout.outputs.branch_name }} --json databaseId,headBranch,status,conclusion,headSha -q '.[] | select(.databaseId != null) | select(.headSha | IN ($COMMITS_JSON)) | .headSha' > "$GITHUB_OUTPUT"
         # gh run list --workflow ${{ github.workflow }} --event ${{ github.event_name }} --branch ${{ steps.checkout.outputs.branch_name }} --status success --limit 1 --json databaseId,headBranch,status,conclusion,headSha -q '.[] | select(.databaseId != null) | select(.headSha | IN ($COMMITS_JSON)) | .headSha' > "$GITHUB_OUTPUT"
         exit 1
