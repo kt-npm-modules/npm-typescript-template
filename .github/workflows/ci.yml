@@ -17,11 +17,11 @@ permissions:
   actions: write # to delete cache (actions/cache)
 
 jobs:
-  # echo:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - run: ${{ tojson(github) }}
-  #       shell: cat {0}
+  echo:
+    runs-on: ubuntu-latest
+    steps:
+      - run: ${{ tojson(github) }}
+        shell: cat {0}
   ci-subpackage:
     runs-on: ubuntu-latest
     steps:
