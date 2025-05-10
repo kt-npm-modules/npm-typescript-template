@@ -40,18 +40,27 @@ runs:
         # Check if the event is a pull request
         if [ "${{ github.event_name }}" == "pull_request" ]; then
           # Get the base branch name from the pull request event
-          branch_name="${{ github.event.pull_request.base.ref }}"
-          repo_name="${{ github.event.pull_request.base.repo.full_name }}"
+          repo_name="${{ github.event.pull_request.head.repo.full_name }}"
+          branch_name="${{ github.event.pull_request.head.ref }}"
         else if [ "${{ github.event_name }}" == "push" ]; then
           # For push events, use the current branch
-          branch_name="${{ github.ref }}"
           repo_name="${{ github.repository }}"
+          branch_name="${{ github.ref_name }}"
         else
           echo "Unsupported event type: ${{ github.event_name }}"
           exit 1
         fi
         echo "branch_name=$branch_name" >> "$GITHUB_OUTPUT"
         echo "repo_name=$repo_name" >> "$GITHUB_OUTPUT"
+
+    # Check out the repository
+    # Combine the repository name and branch name from the previous step
+    - uses: actions/checkout@v4
+      with:
+        repository: ${{ steps.checkout.outputs.repo_name }}
+        ref: ${{ steps.checkout.outputs.branch_name }}
+        fetch-depth: 0
+        path: ${{ steps.temp_dir.outputs.temp_dir }}
 
     # Determine last successful run for the current workflow
     - id: last_success
