@@ -42,7 +42,7 @@ runs:
           # Get the base branch name from the pull request event
           repo_name="${{ github.event.pull_request.head.repo.full_name }}"
           branch_name="${{ github.event.pull_request.head.ref }}"
-        else if [ "${{ github.event_name }}" == "push" ]; then
+        elif [ "${{ github.event_name }}" == "push" ]; then
           # For push events, use the current branch
           repo_name="${{ github.repository }}"
           branch_name="${{ github.ref_name }}"
