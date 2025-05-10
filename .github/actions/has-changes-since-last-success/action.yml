@@ -94,9 +94,17 @@ runs:
           --status success \
           --limit 1 \
           --json databaseId,headBranch,status,conclusion,headSha \
-          -q '.[] | select(.databaseId != null) | select(.headSha | IN (${{ steps.commits.outputs.commits_json }}[])) | .headSha' \
-          > "$GITHUB_OUTPUT"
-        exit 1
+          -q '.[] | select(.databaseId != null) | select(.headSha | IN (${{ steps.commits.outputs.commits_json }}[])) | .headSha'
+        commit_sha=$(gh run list \
+          --workflow ${{ github.workflow }} \
+          --event ${{ github.event_name }} \
+          --branch ${{ steps.config.outputs.target_branch_name }} \
+          --status success \
+          --limit 1 \
+          --json databaseId,headBranch,status,conclusion,headSha \
+          -q '.[] | select(.databaseId != null) | select(.headSha | IN (${{ steps.commits.outputs.commits_json }}[])) | .headSha')
+        echo "Last successfull commit: $commit_sha"
+        echo "commit_sha=$commit_sha" >> "$GITHUB_OUTPUT"
       working-directory: ${{ steps.temp_dir.outputs.temp_dir }}
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
