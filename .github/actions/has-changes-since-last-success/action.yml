@@ -26,8 +26,8 @@ runs:
     - id: temp_dir
       shell: bash
       run: |
-        # Create a temporary directory to avoid issues with the default checkout
-        temp_dir=$(mktemp -d)
+        # generate a temporary directory name
+        temp_dir=".last_success_check_$(date +%s%N)"
         echo "temp_dir=$temp_dir" >> "$GITHUB_OUTPUT"
 
     # Determine what we need to check out
