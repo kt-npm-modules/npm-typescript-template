@@ -74,6 +74,7 @@ runs:
       run: |
         # Get the list of commit SHAs for the current branch
         COMMITS=$(git rev-list ${{ steps.checkout.outputs.branch_name }})
+        echo "Commits in the current branch: $COMMITS"
         COMMITS_JSON=$(echo "$COMMITS" | jq -R -s -c 'split("\n")[:-1]')
         echo "commits_json=$COMMITS_JSON" >> "$GITHUB_OUTPUT"
 
