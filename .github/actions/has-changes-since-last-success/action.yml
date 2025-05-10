@@ -86,12 +86,11 @@ runs:
     - id: last_success
       shell: bash
       run: |
-        git log -n 5
         # Get the last successful run for the current workflow with the list of commits
         gh run list \
           --workflow ${{ github.workflow }} \
           --event ${{ github.event_name }} \
-          --branch ${{ steps.config.outputs.target_branch_name }} \
+          --branch ${{ steps.config.outputs.source_branch_name }} \
           --status success \
           --limit 1 \
           --json databaseId,headBranch,status,conclusion,headSha \
@@ -99,12 +98,16 @@ runs:
         commit_sha=$(gh run list \
           --workflow ${{ github.workflow }} \
           --event ${{ github.event_name }} \
-          --branch ${{ steps.config.outputs.target_branch_name }} \
+          --branch ${{ steps.config.outputs.source_branch_name }} \
           --status success \
           --limit 1 \
           --json databaseId,headBranch,status,conclusion,headSha \
           -q '.[] | select(.databaseId != null) | select(.headSha | IN (${{ steps.commits.outputs.commits_json }}[])) | .headSha')
-        echo "Last successfull commit: $commit_sha"
+        if [ -z "$commit_sha" ]; then
+          echo "No successful commit found."
+        else
+          echo "Found successful commit: $commit_sha"
+        fi
         echo "commit_sha=$commit_sha" >> "$GITHUB_OUTPUT"
       working-directory: ${{ steps.temp_dir.outputs.temp_dir }}
       env:
