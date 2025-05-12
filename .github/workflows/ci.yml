@@ -39,10 +39,10 @@ jobs:
         run: |
           if [ -z "${{ secrets.SONAR_TOKEN }}" ]; then
             echo "SONAR_TOKEN is not set, skipping sonar job"
-            echo "sonar='false'" >> "$GITHUB_OUTPUTS"
+            echo "sonar=false" >> "$GITHUB_OUTPUT"
           else
             echo "SONAR_TOKEN is set, running sonar job"
-            echo "sonar='true'" >> "$GITHUB_OUTPUTS"
+            echo "sonar=true" >> "$GITHUB_OUTPUT"
           fi
 
       - id: matrix-node-version
@@ -51,11 +51,11 @@ jobs:
           if [ -z "${{ vars.MATRIX_NODE_VERSION }}" ]; then
             echo "MATRIX_NODE_VERSION is not set, using default"
             # use the default node version
-            echo "matrix-node-version=${{ env.DEFAULT_MATRIX_NODE_VERSION }}" >> "$GITHUB_OUTPUTS"
+            echo "matrix-node-version=${{ env.DEFAULT_MATRIX_NODE_VERSION }}" >> "$GITHUB_OUTPUT"
           else
             # use the matrix node version
             echo "MATRIX_NODE_VERSION is set, using matrix node version"
-            echo "matrix-node-version=${{ vars.MATRIX_NODE_VERSION }}" >> "$GITHUB_OUTPUTS"
+            echo "matrix-node-version=${{ vars.MATRIX_NODE_VERSION }}" >> "$GITHUB_OUTPUT"
           fi
 
       - id: cache-additional-path
@@ -64,11 +64,11 @@ jobs:
           if [ -z "${{ vars.CACHE_ADDITIONAL_PATH }}" ]; then
             echo "CACHE_ADDITIONAL_PATH is not set, using default"
             # use the default cache additional path
-            echo "cache-additional-path=${{ env.DEFAULT_CACHE_ADDITIONAL_PATH }}" >> "$GITHUB_OUTPUTS"
+            echo "cache-additional-path=${{ env.DEFAULT_CACHE_ADDITIONAL_PATH }}" >> "$GITHUB_OUTPUT"
           else
             # use the cache additional path
             echo "CACHE_ADDITIONAL_PATH is set, using cache additional path"
-            echo "cache-additional-path=${{ vars.CACHE_ADDITIONAL_PATH }}" >> "$GITHUB_OUTPUTS"
+            echo "cache-additional-path=${{ vars.CACHE_ADDITIONAL_PATH }}" >> "$GITHUB_OUTPUT"
           fi
 
   ci-subpackage:
