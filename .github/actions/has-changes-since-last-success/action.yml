@@ -11,6 +11,9 @@ inputs:
   no-dot-github:
     description: 'If true, do not include .github in the paths to check.'
     default: 'false'
+  fetch-depth:
+    description: 'Fetch depth for git checkout.'
+    default: '20'
 outputs:
   success-commit:
     description: 'The commit SHA of the last successful run.'
@@ -42,38 +45,30 @@ runs:
         # Check if the event is a pull request
         if [ "${{ github.event_name }}" == "pull_request" ]; then
           echo "Event is a pull request"
-          target_branch_name="${{ github.event.pull_request.base.ref }}"
-          source_repo_name="${{ github.event.pull_request.head.repo.full_name }}"
           source_branch_name="${{ github.event.pull_request.head.ref }}"
         elif [ "${{ github.event_name }}" == "push" ]; then
           echo "Event is a push"
-          target_branch_name="${{ github.ref_name }}"
-          source_repo_name="${{ github.repository }}"
           source_branch_name="${{ github.ref_name }}"
         else
           echo "Unsupported event type: ${{ github.event_name }}"
           exit 1
         fi
-        echo "Target branch name: $target_branch_name"
-        echo "Source repo: $repo_name"
-        echo "Source branch: $branch_name"
-        echo "target_branch_name=$target_branch_name" >> "$GITHUB_OUTPUT"
+        echo "Source branch name: $source_branch_name"
         echo "source_branch_name=$source_branch_name" >> "$GITHUB_OUTPUT"
-        echo "source_repo_name=$source_repo_name" >> "$GITHUB_OUTPUT"
       working-directory: ${{ steps.temp_dir.outputs.temp_dir }}
 
     # Check out the repository
     # Combine the repository name and branch name from the previous step
     - uses: actions/checkout@v4
       with:
-        fetch-depth: 0
+        fetch-depth: ${{ inputs.fetch-depth }}
         path: ${{ steps.temp_dir.outputs.temp_dir }}
         token: ${{ inputs.github-token }}
 
     - id: commits
       shell: bash
       run: |
-        # print current branch name
+        # Get branch name
         branch_name=$(git rev-parse --abbrev-ref HEAD)
         # Get the list of commit SHAs for the current branch
         COMMITS=$(git rev-list $branch_name)
@@ -126,11 +121,14 @@ runs:
         fi
 
         # Check for changes in the specified paths since the last successful commit
-        if [ "${{ inputs.no-dot-github }}" == "true" ]; then
-          check_paths="${{ inputs.paths }}"
-        else
-          check_paths=".github ${{ inputs.paths }}"
+        # Make single line of paths
+        check_paths=$(echo "${{ inputs.paths }}" | tr '\n' ' ')
+        if [ "${{ inputs.no-dot-github }}" != "true" ]; then
+          # Add .github to the paths
+          check_paths=$(echo "$check_paths .github")
         fi
+
+        echo "Checking for changes in: $check_paths"
 
         has_changes=$(git diff --quiet ${{ steps.last_success.outputs.commit_sha }} $check_paths || echo true)
         if [ "$has_changes" = "true" ]; then
