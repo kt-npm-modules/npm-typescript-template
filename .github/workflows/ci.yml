@@ -48,7 +48,7 @@ jobs:
       - id: matrix-node-version
         run: |
           # set the node version to use in the matrix
-          ech "matrix-node-version=${{ vars.MATRIX_NODE_VERSION || $DEFAULT_MATRIX_NODE_VERSION }}" >> $GITHUB_OUTPUTS
+          echo "matrix-node-version=${{ vars.MATRIX_NODE_VERSION || $DEFAULT_MATRIX_NODE_VERSION }}" >> $GITHUB_OUTPUTS
 
       - id: cache-additional-path
         run: |
