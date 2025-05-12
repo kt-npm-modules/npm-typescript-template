@@ -128,6 +128,8 @@ runs:
           check_paths=$(echo "$check_paths .github")
         fi
 
+        echo "Checking for changes in: $check_paths"
+
         has_changes=$(git diff --quiet ${{ steps.last_success.outputs.commit_sha }} $check_paths || echo true)
         if [ "$has_changes" = "true" ]; then
           echo "Changes detected since last successful run in: $check_paths"
