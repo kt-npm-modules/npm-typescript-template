@@ -25,14 +25,15 @@ jobs:
   ci-subpackage:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
       - id: check-changes
-        uses: ./.github/actions/has-changes-since-last-success
+        uses: kt-actions/has-changes-since-last-success@v1
         with:
           paths: |
             subpackage
             .githooks
+
+      - uses: actions/checkout@v4
+        if: steps.check-changes.outputs.has-changes == 'true'
 
       - run: subpackage/test.sh
         shell: bash
