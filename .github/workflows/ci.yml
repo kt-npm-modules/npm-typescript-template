@@ -32,7 +32,7 @@ jobs:
         with:
           paths: |
             subpackage
-            andMore
+            .githooks
 
       - run: subpackage/test.sh
         shell: bash
