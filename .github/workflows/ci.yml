@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - id: check-changes
-        uses: ./.github/actions/has-changes-since-last-success
+        uses: kt-actions/has-changes-since-last-success
         with:
           paths: |
             subpackage
