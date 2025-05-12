@@ -68,7 +68,7 @@ runs:
     - id: commits
       shell: bash
       run: |
-        # print current branch name
+        # Get branch name
         branch_name=$(git rev-parse --abbrev-ref HEAD)
         # Get the list of commit SHAs for the current branch
         COMMITS=$(git rev-list $branch_name)
