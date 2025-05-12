@@ -40,7 +40,7 @@ jobs:
         if: steps.check-changes.outputs.has-changes == 'true'
 
   check:
-    if: true == false
+    # if: true == false
     runs-on: ubuntu-latest
     steps:
       - uses: kt-workflows/actions/npm-ci-check@main
@@ -50,7 +50,7 @@ jobs:
           # cache-reset: true
 
   test:
-    if: true == false
+    # if: true == false
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -64,7 +64,7 @@ jobs:
           # cache-reset: true
 
   sonar:
-    if: true == false
+    # if: true == false
     runs-on: ubuntu-latest
     steps:
       - uses: kt-workflows/actions/npm-ci-sonar@main
