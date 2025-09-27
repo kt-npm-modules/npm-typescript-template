@@ -1,7 +1,7 @@
 {
 	"name": "@ktarmyshov/npm-typescript-template",
 	"description": "Template repository for npm packages written in TypeScript",
-	"version": "0.0.8",
+	"version": "0.0.9",
 	"license": "MIT",
 	"author": {
 		"name": "Konstantin Tarmyshov",
