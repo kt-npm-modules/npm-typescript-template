@@ -1,5 +1,14 @@
 # @ktarmyshov/npm-typescript-template
 
+## 0.0.10
+
+### Patch Changes
+
+- 69c075e: dependabot: directory '/', update @types/node
+- 69c075e: dependabot: directory '/', update eslint
+- 69c075e: dependabot: directory '/', update typescript-eslint
+- 69c075e: dependabot: directory '/', update typescript
+
 ## 0.0.9
 
 ### Patch Changes
