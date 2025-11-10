@@ -1,5 +1,20 @@
 # @ktarmyshov/npm-typescript-template
 
+## 0.0.11
+
+### Patch Changes
+
+- a07aaac: dependabot: directory '/', update @eslint/compat
+- a07aaac: dependabot: directory '/', update @types/node
+- a07aaac: dependabot: directory '/', update @vitest/coverage-istanbul
+- a07aaac: dependabot: directory '/', update eslint
+- a07aaac: dependabot: directory '/', update rimraf
+- a07aaac: dependabot: directory '/', update vitest
+- 79603b0: dependabot: directory '/', update @vitest/coverage-istanbul
+- 79603b0: dependabot: directory '/', update eslint
+- 79603b0: dependabot: directory '/', update typescript-eslint
+- 79603b0: dependabot: directory '/', update vitest
+
 ## 0.0.10
 
 ### Patch Changes
