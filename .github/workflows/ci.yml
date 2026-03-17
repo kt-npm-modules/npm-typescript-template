@@ -31,9 +31,23 @@ jobs:
   config:
     runs-on: ubuntu-latest
     outputs:
+      matrix-node-version: ${{ steps.matrix-node-version.outputs.matrix-node-version }}
       sonar: ${{ steps.sonar.outputs.sonar }}
       cache-additional-path: ${{ steps.cache-additional-path.outputs.cache-additional-path }}
     steps:
+      - id: matrix-node-version
+        run: |
+          # set the node version to use in the matrix
+          if [ -z "${{ vars.MATRIX_NODE_VERSION }}" ]; then
+            echo "MATRIX_NODE_VERSION is not set, using default"
+            # use the default node version
+            echo "matrix-node-version=${{ env.DEFAULT_MATRIX_NODE_VERSION }}" >> "$GITHUB_OUTPUT"
+          else
+            # use the matrix node version
+            echo "MATRIX_NODE_VERSION is set, using matrix node version"
+            echo "matrix-node-version=${{ vars.MATRIX_NODE_VERSION }}" >> "$GITHUB_OUTPUT"
+          fi
+
       - id: sonar
         run: |
           if [ -z "${{ secrets.SONAR_TOKEN }}" ]; then
@@ -80,7 +94,7 @@ jobs:
     steps:
       - uses: kt-workflows/actions/npm-ci-check@main
         with:
-          matrix-node-version: ${{ vars.MATRIX_NODE_VERSION || env.DEFAULT_MATRIX_NODE_VERSION }}
+          matrix-node-version: needs.config.outputs.matrix-node-version
           cache-additional-path: needs.config.outputs.cache-additional-path
           # cache-reset: true
 
@@ -89,7 +103,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ${{ fromJson(vars.MATRIX_NODE_VERSION || env.DEFAULT_MATRIX_NODE_VERSION) }}
+        node-version: ${{ fromJson(needs.config.outputs.matrix-node-version) }}
     steps:
       - uses: kt-workflows/actions/npm-ci-test@main
         with:
@@ -105,7 +119,7 @@ jobs:
     steps:
       - uses: kt-workflows/actions/npm-ci-sonar@main
         with:
-          matrix-node-version: ${{ vars.MATRIX_NODE_VERSION || env.DEFAULT_MATRIX_NODE_VERSION }}
+          matrix-node-version: needs.config.outputs.matrix-node-version
           sonar-token: ${{ secrets.SONAR_TOKEN }}
           fail-on-empty-token: true
           cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
