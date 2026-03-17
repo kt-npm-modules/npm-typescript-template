@@ -111,8 +111,8 @@ jobs:
           cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
           # cache-reset: true
 
-  required:
-    name: required
+  required-main:
+    name: required-main
     if: always()
     needs:
       - ci-subpackage
@@ -121,18 +121,26 @@ jobs:
       - sonar
     runs-on: ubuntu-latest
     steps:
-      - name: Verify required jobs
+      - name: Verify required jobs for main
         shell: bash
         run: |
-          echo "ci-subpackage: ${{ needs['ci-subpackage'].result }}"
-          echo "check: ${{ needs.check.result }}"
-          echo "test: ${{ needs.test.result }}"
-          echo "sonar: ${{ needs.sonar.result }}"
-
           [[ "${{ needs['ci-subpackage'].result }}" == "success" ]] || exit 1
           [[ "${{ needs.check.result }}" == "success" ]] || exit 1
           [[ "${{ needs.test.result }}" == "success" ]] || exit 1
+          [[ "${{ needs.sonar.result }}" == "success" ]] || exit 1
 
-          if [[ "${{ needs.sonar.result }}" != "success" && "${{ needs.sonar.result }}" != "skipped" ]]; then
-            exit 1
-          fi
+  required-contribution:
+    name: required-contribution
+    if: always()
+    needs:
+      - ci-subpackage
+      - check
+      - test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify required jobs for contribution
+        shell: bash
+        run: |
+          [[ "${{ needs['ci-subpackage'].result }}" == "success" ]] || exit 1
+          [[ "${{ needs.check.result }}" == "success" ]] || exit 1
+          [[ "${{ needs.test.result }}" == "success" ]] || exit 1
