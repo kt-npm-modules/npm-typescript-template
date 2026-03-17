@@ -94,7 +94,7 @@ jobs:
     steps:
       - uses: kt-workflows/actions/npm-ci-check@main
         with:
-          matrix-node-version: needs.config.outputs.matrix-node-version
+          matrix-node-version: ${{ needs.config.outputs.matrix-node-version }}
           cache-additional-path: needs.config.outputs.cache-additional-path
           # cache-reset: true
 
@@ -119,7 +119,7 @@ jobs:
     steps:
       - uses: kt-workflows/actions/npm-ci-sonar@main
         with:
-          matrix-node-version: needs.config.outputs.matrix-node-version
+          matrix-node-version: ${{ needs.config.outputs.matrix-node-version }}
           sonar-token: ${{ secrets.SONAR_TOKEN }}
           fail-on-empty-token: true
           cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
