@@ -1,10 +1,8 @@
 [![NPM Version](https://img.shields.io/npm/v/%40ktarmyshov%2Fnpm-typescript-template)](https://www.npmjs.com/package/@ktarmyshov/npm-typescript-template)
 [![CI](https://github.com/kt-npm-modules/npm-typescript-template/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/kt-npm-modules/npm-typescript-template/actions/workflows/ci.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=kt-npm-modules_npm-typescript-template&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=kt-npm-modules_npm-typescript-template)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=kt-npm-modules_npm-typescript-template&metric=bugs)](https://sonarcloud.io/summary/new_code?id=kt-npm-modules_npm-typescript-template)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=kt-npm-modules_npm-typescript-template&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=kt-npm-modules_npm-typescript-template)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=kt-npm-modules_npm-typescript-template&metric=coverage)](https://sonarcloud.io/summary/new_code?id=kt-npm-modules_npm-typescript-template)
-[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=kt-npm-modules_npm-typescript-template&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=kt-npm-modules_npm-typescript-template)
+[![License](https://img.shields.io/npm/l/@ktarmyshov/npm-typescript-template)](./LICENSE)
 
 # npm-typescript-template
 
