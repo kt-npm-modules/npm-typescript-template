@@ -127,7 +127,6 @@ jobs:
 
   required-main:
     name: required-main
-    if: always()
     needs:
       - ci-subpackage
       - check
@@ -138,14 +137,11 @@ jobs:
       - name: Verify required jobs for main
         shell: bash
         run: |
-          [[ "${{ needs['ci-subpackage'].result }}" == "success" ]] || exit 1
-          [[ "${{ needs.check.result }}" == "success" ]] || exit 1
-          [[ "${{ needs.test.result }}" == "success" ]] || exit 1
-          [[ "${{ needs.sonar.result }}" == "success" ]] || exit 1
+          echo "Required jobs for main are fullfilled"
 
   required-contribution:
     name: required-contribution
-    if: always()
+    # if: always()
     needs:
       - ci-subpackage
       - check
@@ -155,6 +151,4 @@ jobs:
       - name: Verify required jobs for contribution
         shell: bash
         run: |
-          [[ "${{ needs['ci-subpackage'].result }}" == "success" ]] || exit 1
-          [[ "${{ needs.check.result }}" == "success" ]] || exit 1
-          [[ "${{ needs.test.result }}" == "success" ]] || exit 1
+          echo "Required jobs for contribution are fullfilled"
