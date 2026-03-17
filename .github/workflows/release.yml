@@ -41,7 +41,6 @@ jobs:
           matrix-node-version: ${{ vars.MATRIX_NODE_VERSION }}
           cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
           # cache-reset: true
-          npm-token: ${{ secrets.NPM_TOKEN }}
 
   # This is likely not needed because we updated script npm run changeset:version - which updates the package-lock.json
   # update-pkg-lock:
