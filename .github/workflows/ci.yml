@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: check-changes
-        uses: kt-actions/has-changes-since-last-success@v1
+        uses: kt-workflows/actions/has-changes-since-last-success@main
         with:
           paths: |
             subpackage
