@@ -141,7 +141,6 @@ jobs:
 
   required-contribution:
     name: required-contribution
-    # if: always()
     needs:
       - ci-subpackage
       - check
