@@ -20,7 +20,6 @@ env:
   # set the default node version to use in the matrix
   DEFAULT_MATRIX_NODE_VERSION: '[22, 24]'
   DEFAULT_CACHE_RESET: false
-  # DEFAULT_CACHE_ADDITIONAL_PATH: 'node_modules/.cache'
 
 jobs:
   echo:
@@ -35,7 +34,6 @@ jobs:
       matrix-node-version: ${{ steps.matrix-node-version.outputs.matrix-node-version }}
       sonar: ${{ steps.sonar.outputs.sonar }}
       cache-reset: ${{ steps.cache-reset.outputs.cache-reset }}
-      cache-additional-path: ${{ steps.cache-additional-path.outputs.cache-additional-path }}
     steps:
       - id: matrix-node-version
         run: |
@@ -57,19 +55,6 @@ jobs:
         run: |
           # Set the cache reset to use
           echo "cache-reset=${{ vars.CACHE_RESET || env.DEFAULT_CACHE_RESET }}" >> "$GITHUB_OUTPUT"
-
-      - id: cache-additional-path
-        run: |
-          # Set the cache additional path to use
-          additional='${{ vars.CACHE_ADDITIONAL_PATH || '' }}'
-          default_additional='${{ env.DEFAULT_CACHE_ADDITIONAL_PATH || '' }}'
-
-          {
-            echo 'cache-additional-path<<EOF'
-            [ -n "$additional" ] && echo "$additional"
-            [ -n "$default_additional" ] && echo "$default_additional"
-            echo 'EOF'
-          } >> "$GITHUB_OUTPUT"
 
   ci-subpackage:
     runs-on: ubuntu-latest
@@ -96,7 +81,6 @@ jobs:
         with:
           matrix-node-version: ${{ needs.config.outputs.matrix-node-version }}
           cache-reset: ${{ needs.config.outputs.cache-reset }}
-          cache-additional-path: ${{ needs.config.outputs.cache-additional-path }}
 
   test:
     needs: config
@@ -109,7 +93,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache-reset: ${{ needs.config.outputs.cache-reset }}
-          cache-additional-path: ${{ needs.config.outputs.cache-additional-path }}
 
   sonar:
     needs: config
@@ -122,7 +105,6 @@ jobs:
           sonar-token: ${{ secrets.SONAR_TOKEN }}
           fail-on-empty-token: true
           cache-reset: ${{ needs.config.outputs.cache-reset }}
-          cache-additional-path: ${{ needs.config.outputs.cache-additional-path }}
 
   required-main:
     name: required-main
