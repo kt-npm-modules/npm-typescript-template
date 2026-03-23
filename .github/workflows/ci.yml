@@ -106,6 +106,8 @@ jobs:
           fail-on-empty-token: true
           cache-reset: ${{ needs.config.outputs.cache-reset }}
 
+  # Stable aggregate required-* checks for branch protection rules.
+  # This avoids depending directly on individual matrix job statuses.
   required-main:
     name: required-main
     needs:
