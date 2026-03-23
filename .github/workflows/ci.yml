@@ -39,8 +39,8 @@ jobs:
     steps:
       - id: matrix-node-version
         run: |
-          # set the node version to use in the matrix
-          echo "matrix-node-version=${{ vars.MATRIX_NODE_VERSION || env.DEFAULT_MATRIX_NODE_VERSION }}" >> "$GITHUB_OUTPUT"
+          # Set the node version to use in the matrix
+          echo "matrix-node-version=${{ vars.MATRIX_NODE_VERSION || env.DEFAULT_MATRIX_NODE_VERSION || '' }}" >> "$GITHUB_OUTPUT"
 
       - id: sonar
         run: |
@@ -55,12 +55,12 @@ jobs:
 
       - id: cache-reset
         run: |
-          # set the cache reset to use
+          # Set the cache reset to use
           echo "cache-reset=${{ vars.CACHE_RESET || env.DEFAULT_CACHE_RESET }}" >> "$GITHUB_OUTPUT"
 
       - id: cache-additional-path
         run: |
-          # set the cache additional path to use
+          # Set the cache additional path to use
           echo "cache-additional-path=${{ vars.CACHE_ADDITIONAL_PATH || env.DEFAULT_CACHE_ADDITIONAL_PATH || '' }}" >> "$GITHUB_OUTPUT"
 
   ci-subpackage:
