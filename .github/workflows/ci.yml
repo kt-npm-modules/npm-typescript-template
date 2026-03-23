@@ -118,7 +118,7 @@ jobs:
       - name: Verify required jobs for main
         shell: bash
         run: |
-          echo "Required jobs for main are fullfilled"
+          echo "Required jobs for main are fulfilled"
 
   required-contribution:
     name: required-contribution
@@ -131,4 +131,4 @@ jobs:
       - name: Verify required jobs for contribution
         shell: bash
         run: |
-          echo "Required jobs for contribution are fullfilled"
+          echo "Required jobs for contribution are fulfilled"
