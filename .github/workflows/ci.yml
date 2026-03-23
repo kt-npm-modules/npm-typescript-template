@@ -44,6 +44,7 @@ jobs:
 
       - id: sonar
         run: |
+          # Check if the SONAR_TOKEN secret is set, if not skip the sonar job
           if [ -z "${{ secrets.SONAR_TOKEN }}" ]; then
             echo "SONAR_TOKEN is not set, skipping sonar job"
             echo "sonar=false" >> "$GITHUB_OUTPUT"
@@ -60,15 +61,7 @@ jobs:
       - id: cache-additional-path
         run: |
           # set the cache additional path to use
-          if [ -z "${{ vars.CACHE_ADDITIONAL_PATH }}" ]; then
-            echo "CACHE_ADDITIONAL_PATH is not set, using default"
-            # use the default cache additional path
-            echo "cache-additional-path=${{ env.DEFAULT_CACHE_ADDITIONAL_PATH }}" >> "$GITHUB_OUTPUT"
-          else
-            # use the cache additional path
-            echo "CACHE_ADDITIONAL_PATH is set, using cache additional path"
-            echo "cache-additional-path=${{ vars.CACHE_ADDITIONAL_PATH }}" >> "$GITHUB_OUTPUT"
-          fi
+          echo "cache-additional-path=${{ vars.CACHE_ADDITIONAL_PATH || env.DEFAULT_CACHE_ADDITIONAL_PATH }}" >> "$GITHUB_OUTPUT"
 
   ci-subpackage:
     runs-on: ubuntu-latest
