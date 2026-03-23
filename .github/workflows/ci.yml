@@ -61,7 +61,15 @@ jobs:
       - id: cache-additional-path
         run: |
           # Set the cache additional path to use
-          echo "cache-additional-path=${{ vars.CACHE_ADDITIONAL_PATH || env.DEFAULT_CACHE_ADDITIONAL_PATH || '' }}" >> "$GITHUB_OUTPUT"
+          additional='${{ vars.CACHE_ADDITIONAL_PATH || '' }}'
+          default_additional='${{ env.DEFAULT_CACHE_ADDITIONAL_PATH || '' }}'
+
+          {
+            echo 'cache-additional-path<<EOF'
+            [ -n "$additional" ] && echo "$additional"
+            [ -n "$default_additional" ] && echo "$default_additional"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
 
   ci-subpackage:
     runs-on: ubuntu-latest
