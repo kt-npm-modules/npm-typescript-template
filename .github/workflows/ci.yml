@@ -19,6 +19,7 @@ permissions:
 env:
   # set the default node version to use in the matrix
   DEFAULT_MATRIX_NODE_VERSION: '[22, 24]'
+  DEFAULT_CACHE_RESET: false
   # DEFAULT_CACHE_ADDITIONAL_PATH: 'node_modules/.cache'
 
 jobs:
@@ -33,6 +34,7 @@ jobs:
     outputs:
       matrix-node-version: ${{ steps.matrix-node-version.outputs.matrix-node-version }}
       sonar: ${{ steps.sonar.outputs.sonar }}
+      cache-reset: ${{ steps.cache-reset.outputs.cache-reset }}
       cache-additional-path: ${{ steps.cache-additional-path.outputs.cache-additional-path }}
     steps:
       - id: matrix-node-version
@@ -57,6 +59,11 @@ jobs:
             echo "SONAR_TOKEN is set, running sonar job"
             echo "sonar=true" >> "$GITHUB_OUTPUT"
           fi
+
+      - id: cache-reset
+        run: |
+          # set the cache reset to use
+          echo "cache-reset=${{ vars.CACHE_RESET || env.DEFAULT_CACHE_RESET }}" >> "$GITHUB_OUTPUT"
 
       - id: cache-additional-path
         run: |
