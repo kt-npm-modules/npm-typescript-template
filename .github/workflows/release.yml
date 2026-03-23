@@ -22,6 +22,7 @@ jobs:
   #   steps:
   #     - run: ${{ tojson(github) }}
   #       shell: cat {0}
+
   release:
     # prevents this action from running on forks
     if: >-
@@ -38,9 +39,9 @@ jobs:
         with:
           app-id: ${{ secrets.WORKFLOW_APP_ID }}
           private-key: ${{ secrets.WORKFLOW_APP_PRIVATE_KEY }}
-          node-version: 22
-          cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
+          node-version: ${{ vars.MATRIX_NODE_VERSION }}
           # cache-reset: true
+          # npm-token: ${{ secrets.NPM_TOKEN }} # uncomment if not trusted publishing
 
   # This is likely not needed because we updated script npm run changeset:version - which updates the package-lock.json
   # update-pkg-lock:
