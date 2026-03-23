@@ -40,15 +40,7 @@ jobs:
       - id: matrix-node-version
         run: |
           # set the node version to use in the matrix
-          if [ -z "${{ vars.MATRIX_NODE_VERSION }}" ]; then
-            echo "MATRIX_NODE_VERSION is not set, using default"
-            # use the default node version
-            echo "matrix-node-version=${{ env.DEFAULT_MATRIX_NODE_VERSION }}" >> "$GITHUB_OUTPUT"
-          else
-            # use the matrix node version
-            echo "MATRIX_NODE_VERSION is set, using matrix node version"
-            echo "matrix-node-version=${{ vars.MATRIX_NODE_VERSION }}" >> "$GITHUB_OUTPUT"
-          fi
+          echo "matrix-node-version=${{ vars.MATRIX_NODE_VERSION || env.DEFAULT_MATRIX_NODE_VERSION }}" >> "$GITHUB_OUTPUT"
 
       - id: sonar
         run: |
