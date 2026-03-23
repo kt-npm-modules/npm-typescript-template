@@ -20,7 +20,6 @@ env:
   # set the default node version to use in the matrix
   DEFAULT_MATRIX_NODE_VERSION: '[22, 24]'
   DEFAULT_CACHE_RESET: false
-  # DEFAULT_CACHE_ADDITIONAL_PATH: 'node_modules/.cache'
 
 jobs:
   echo:
@@ -35,23 +34,15 @@ jobs:
       matrix-node-version: ${{ steps.matrix-node-version.outputs.matrix-node-version }}
       sonar: ${{ steps.sonar.outputs.sonar }}
       cache-reset: ${{ steps.cache-reset.outputs.cache-reset }}
-      cache-additional-path: ${{ steps.cache-additional-path.outputs.cache-additional-path }}
     steps:
       - id: matrix-node-version
         run: |
-          # set the node version to use in the matrix
-          if [ -z "${{ vars.MATRIX_NODE_VERSION }}" ]; then
-            echo "MATRIX_NODE_VERSION is not set, using default"
-            # use the default node version
-            echo "matrix-node-version=${{ env.DEFAULT_MATRIX_NODE_VERSION }}" >> "$GITHUB_OUTPUT"
-          else
-            # use the matrix node version
-            echo "MATRIX_NODE_VERSION is set, using matrix node version"
-            echo "matrix-node-version=${{ vars.MATRIX_NODE_VERSION }}" >> "$GITHUB_OUTPUT"
-          fi
+          # Set the node version to use in the matrix
+          echo "matrix-node-version=${{ vars.MATRIX_NODE_VERSION || env.DEFAULT_MATRIX_NODE_VERSION || '' }}" >> "$GITHUB_OUTPUT"
 
       - id: sonar
         run: |
+          # Check if the SONAR_TOKEN secret is set, if not skip the sonar job
           if [ -z "${{ secrets.SONAR_TOKEN }}" ]; then
             echo "SONAR_TOKEN is not set, skipping sonar job"
             echo "sonar=false" >> "$GITHUB_OUTPUT"
@@ -62,21 +53,8 @@ jobs:
 
       - id: cache-reset
         run: |
-          # set the cache reset to use
+          # Set the cache reset to use
           echo "cache-reset=${{ vars.CACHE_RESET || env.DEFAULT_CACHE_RESET }}" >> "$GITHUB_OUTPUT"
-
-      - id: cache-additional-path
-        run: |
-          # set the cache additional path to use
-          if [ -z "${{ vars.CACHE_ADDITIONAL_PATH }}" ]; then
-            echo "CACHE_ADDITIONAL_PATH is not set, using default"
-            # use the default cache additional path
-            echo "cache-additional-path=${{ env.DEFAULT_CACHE_ADDITIONAL_PATH }}" >> "$GITHUB_OUTPUT"
-          else
-            # use the cache additional path
-            echo "CACHE_ADDITIONAL_PATH is set, using cache additional path"
-            echo "cache-additional-path=${{ vars.CACHE_ADDITIONAL_PATH }}" >> "$GITHUB_OUTPUT"
-          fi
 
   ci-subpackage:
     runs-on: ubuntu-latest
@@ -102,8 +80,7 @@ jobs:
       - uses: kt-workflows/actions/npm-ci-check@main
         with:
           matrix-node-version: ${{ needs.config.outputs.matrix-node-version }}
-          cache-additional-path: needs.config.outputs.cache-additional-path
-          # cache-reset: true
+          cache-reset: ${{ needs.config.outputs.cache-reset }}
 
   test:
     needs: config
@@ -114,14 +91,12 @@ jobs:
     steps:
       - uses: kt-workflows/actions/npm-ci-test@main
         with:
-          # pass the matrix node version to the called workflow
           node-version: ${{ matrix.node-version }}
-          cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
-          # cache-reset: true
+          cache-reset: ${{ needs.config.outputs.cache-reset }}
 
   sonar:
-    if: needs.config.outputs.sonar == 'true'
     needs: config
+    if: needs.config.outputs.sonar == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: kt-workflows/actions/npm-ci-sonar@main
@@ -129,9 +104,10 @@ jobs:
           matrix-node-version: ${{ needs.config.outputs.matrix-node-version }}
           sonar-token: ${{ secrets.SONAR_TOKEN }}
           fail-on-empty-token: true
-          cache-additional-path: ${{ vars.CACHE_ADDITIONAL_PATH }}
-          # cache-reset: true
+          cache-reset: ${{ needs.config.outputs.cache-reset }}
 
+  # Stable aggregate required-* checks for branch protection rules.
+  # This avoids depending directly on individual matrix job statuses.
   required-main:
     name: required-main
     needs:
@@ -144,7 +120,7 @@ jobs:
       - name: Verify required jobs for main
         shell: bash
         run: |
-          echo "Required jobs for main are fullfilled"
+          echo "Required jobs for main are fulfilled"
 
   required-contribution:
     name: required-contribution
@@ -157,4 +133,4 @@ jobs:
       - name: Verify required jobs for contribution
         shell: bash
         run: |
-          echo "Required jobs for contribution are fullfilled"
+          echo "Required jobs for contribution are fulfilled"
