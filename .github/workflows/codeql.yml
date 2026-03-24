@@ -19,7 +19,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  codeql-analyze:
+  codeql:
     # name: CodeQL-(${{ matrix.language }})
     runs-on: ubuntu-latest
     permissions:
