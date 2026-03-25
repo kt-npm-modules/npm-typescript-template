@@ -4,7 +4,11 @@ on:
   push:
     branches:
       - main
+      - contribution
   pull_request:
+    branches:
+      - main
+      - contribution
 
 # cancel in-progress runs on new commits to same PR (gitub.event.number)
 concurrency:
@@ -22,11 +26,11 @@ env:
   DEFAULT_CACHE_RESET: false
 
 jobs:
-  echo:
-    runs-on: ubuntu-latest
-    steps:
-      - run: ${{ tojson(github) }}
-        shell: cat {0}
+  # echo:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - run: ${{ tojson(github) }}
+  #       shell: cat {0}
 
   config:
     runs-on: ubuntu-latest

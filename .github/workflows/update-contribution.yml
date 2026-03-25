@@ -13,9 +13,57 @@ permissions:
   contents: write
 
 jobs:
-  update-pull:
+  detect-pr-source:
     # prevents this action from running on forks
     if: github.repository == 'kt-npm-modules/npm-typescript-template'
+    runs-on: ubuntu-latest
+    outputs:
+      skip: ${{ steps.decide.outputs.skip }}
+
+    steps:
+      - id: pr
+        uses: 8BitJonny/gh-get-current-pr@4.0.0
+        with:
+          github-token: ${{ github.token }}
+          sha: ${{ github.sha }}
+
+      - id: debug-pr
+        name: Debug PR JSON
+        if: steps.pr.outputs.pr_found == 'true'
+        run: |
+          echo "PR detected: #${{ steps.pr.outputs.number }}"
+          echo "Pretty PR JSON:"
+          echo '${{ steps.pr.outputs.pr }}' | jq .
+
+      - id: decide
+        run: |
+          SKIP=false
+
+          echo "PR found: ${{ steps.pr.outputs.pr_found }}"
+
+          if [[ "${{ steps.pr.outputs.pr_found }}" == "true" ]]; then
+            HEAD_REF=$(jq -r '.head.ref' <<< '${{ steps.pr.outputs.pr }}')
+            BASE_REF=$(jq -r '.base.ref' <<< '${{ steps.pr.outputs.pr }}')
+            MERGED_AT=$(jq -r '.merged_at' <<< '${{ steps.pr.outputs.pr }}')
+
+            echo "PR head: $HEAD_REF"
+            echo "PR base: $BASE_REF"
+            echo "PR merged_at: $MERGED_AT"
+
+            if [[ "$HEAD_REF" == "contribution" && "$BASE_REF" == "main" && "$MERGED_AT" != "null" ]]; then
+              echo "Push came from merged PR contribution -> main. Skipping."
+              SKIP=true
+            fi
+          fi
+
+          echo "skip=$SKIP" >> "$GITHUB_OUTPUT"
+
+  update-pull:
+    needs: detect-pr-source
+    # prevents this action from running on forks
+    if: |
+      github.repository == 'kt-npm-modules/npm-typescript-template' &&
+      needs.detect-pr-source.outputs.skip != 'true'
     runs-on: ubuntu-latest
     steps:
       - id: app-token
