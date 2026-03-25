@@ -11,6 +11,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: read
 
 concurrency:
   group: ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
@@ -26,41 +27,32 @@ jobs:
 
     steps:
       - id: pr
-        uses: 8BitJonny/gh-get-current-pr@4.0.0
+        uses: kt-workflows/actions/get-associated-pr@main
         with:
           github-token: ${{ github.token }}
           sha: ${{ github.sha }}
-
-      - id: debug-pr
-        name: Debug PR JSON
-        if: steps.pr.outputs.pr_found == 'true'
-        run: |
-          echo "PR detected: #${{ steps.pr.outputs.number }}"
-          echo "Pretty PR JSON:"
-          echo '${{ steps.pr.outputs.pr }}' | jq .
+          echo: 'true'
 
       - id: decide
+        shell: bash
         run: |
           SKIP=false
 
-          echo "PR found: ${{ steps.pr.outputs.pr_found }}"
+          echo "PR found: ${{ steps.pr.outputs.pr-found }}"
+          echo "PR number: ${{ steps.pr.outputs.pr-number }}"
+          echo "PR base: ${{ steps.pr.outputs.pr-base-ref }}"
+          echo "PR head: ${{ steps.pr.outputs.pr-head-ref }}"
+          echo "PR merged: ${{ steps.pr.outputs.pr-merged }}"
 
-          if [[ "${{ steps.pr.outputs.pr_found }}" == "true" ]]; then
-            HEAD_REF=$(jq -r '.head.ref' <<< '${{ steps.pr.outputs.pr }}')
-            BASE_REF=$(jq -r '.base.ref' <<< '${{ steps.pr.outputs.pr }}')
-            MERGED_AT=$(jq -r '.merged_at' <<< '${{ steps.pr.outputs.pr }}')
-
-            echo "PR head: $HEAD_REF"
-            echo "PR base: $BASE_REF"
-            echo "PR merged_at: $MERGED_AT"
-
-            if [[ "$HEAD_REF" == "contribution" && "$BASE_REF" == "main" && "$MERGED_AT" != "null" ]]; then
-              echo "Push came from merged PR contribution -> main. Skipping."
-              SKIP=true
-            fi
+          if [[ "${{ steps.pr.outputs.pr-found }}" == "true" && \
+                "${{ steps.pr.outputs.pr-merged }}" == "true" && \
+                "${{ steps.pr.outputs.pr-base-ref }}" == "main" && \
+                "${{ steps.pr.outputs.pr-head-ref }}" == "contribution" ]]; then
+            echo "Push came from merged PR contribution -> main. Skipping."
+            SKIP=true
           fi
 
-          echo "skip=$SKIP" >> "$GITHUB_OUTPUT"
+          echo "skip=${SKIP}" >> "$GITHUB_OUTPUT"
 
   update-pull:
     needs: detect-pr-source
@@ -84,6 +76,7 @@ jobs:
 
       - name: Merge 'main' into 'contribution' branch
         run: |
-          git checkout contribution || git checkout -b contribution
-          git merge main
+          git fetch origin main contribution
+          git checkout contribution || git checkout -b contribution origin/contribution
+          git merge origin/main
           git push origin contribution
