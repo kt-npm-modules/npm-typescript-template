@@ -1,5 +1,10 @@
 name: CONTRIBUTION-RESET
 
+# Resets 'contribution' to match 'main' exactly after a merged PR
+# from contribution -> main. This is needed because contribution -> main
+# uses squash merge, so the branch histories diverge and a normal merge-back
+# would leave contribution ahead with stale commits.
+
 on:
   pull_request:
     types:
