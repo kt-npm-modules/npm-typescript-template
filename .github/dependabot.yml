@@ -4,35 +4,31 @@
 # https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 
 version: 2
-
 updates:
   - package-ecosystem: 'npm'
-    directories:
-      - '/'
+    directory: '/'
     schedule:
       interval: 'weekly'
-      time: '03:47' # UTC ?
+      time: '03:47'
       timezone: 'Europe/Berlin'
-
-    groups:
-      minor-and-patch:
-        applies-to: version-updates
-        patterns:
-          - '*'
-        update-types:
-          - minor
-          - patch
-
-      major:
-        applies-to: version-updates
-        patterns:
-          - '*'
-        update-types:
-          - major
 
     ignore:
       - dependency-name: 'npm'
         versions: ['<10.0.0', '>=11.0.0']
+
+    groups:
+      minor-and-patch:
+        patterns:
+          - '*'
+        update-types:
+          - 'minor'
+          - 'patch'
+
+      major:
+        patterns:
+          - '*'
+        update-types:
+          - 'major'
 
     commit-message:
       prefix: 'dependabot'

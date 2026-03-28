@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - contribution
   pull_request:
 
 # cancel in-progress runs on new commits to same PR (gitub.event.number)
@@ -14,6 +15,7 @@ concurrency:
 permissions:
   contents: read # to fetch code (actions/checkout)
   actions: write # to delete cache (actions/cache)
+  pull-requests: read # to check for open PRs (gh pr list)
 
 env:
   # set the default node version to use in the matrix
@@ -27,7 +29,37 @@ jobs:
   #     - run: ${{ tojson(github) }}
   #       shell: cat {0}
 
+  check-execution:
+    runs-on: ubuntu-latest
+    outputs:
+      should-run: ${{ steps.check-event.outputs.should-run }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - id: check-event
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "Checking if the workflow should execute for this event"
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/contribution" ]]; then
+            echo "This is a push event to contribution branch, checking for open PRs..."
+            pr_count=$(gh pr list --head contribution --base main --state open --limit 1 --json number --jq 'length')
+            if [[ "$pr_count" -gt 0 ]]; then
+              echo "There is an open PR for contribution -> main, skipping this workflow to avoid duplicate runs."
+              echo "should-run=false" >> "$GITHUB_OUTPUT"
+            else
+              echo "No open PRs for contribution -> main, proceeding with this workflow."
+              echo "should-run=true" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo "This is not a push event to contribution branch, proceeding with this workflow."
+            echo "should-run=true" >> "$GITHUB_OUTPUT"
+          fi
+
   config:
+    needs: check-execution
+    if: needs.check-execution.outputs.should-run == 'true'
     runs-on: ubuntu-latest
     outputs:
       matrix-node-version: ${{ steps.matrix-node-version.outputs.matrix-node-version }}
@@ -56,6 +88,7 @@ jobs:
           echo "cache-reset=${{ vars.CACHE_RESET || env.DEFAULT_CACHE_RESET }}" >> "$GITHUB_OUTPUT"
 
   ci-subpackage:
+    needs: config
     runs-on: ubuntu-latest
     steps:
       - id: check-changes
@@ -108,7 +141,7 @@ jobs:
   # Stable aggregate required-* checks for branch protection rules.
   # This avoids depending directly on individual matrix job statuses.
   required-main:
-    name: required-main
+    name: required-main (${{ github.event_name }})
     needs:
       - ci-subpackage
       - check
@@ -122,7 +155,7 @@ jobs:
           echo "Required jobs for main are fulfilled"
 
   required-contribution:
-    name: required-contribution
+    name: required-contribution (${{ github.event_name }})
     needs:
       - ci-subpackage
       - check
