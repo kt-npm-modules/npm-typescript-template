@@ -141,8 +141,7 @@ jobs:
   # Stable aggregate required-* checks for branch protection rules.
   # This avoids depending directly on individual matrix job statuses.
   required-main:
-    # name: required-main (${{ github.event_name }})
-    name: required-main
+    name: required-main (${{ github.event_name }})
     needs:
       - ci-subpackage
       - check
@@ -156,8 +155,7 @@ jobs:
           echo "Required jobs for main are fulfilled"
 
   required-contribution:
-    # name: required-contribution (${{ github.event_name }})
-    name: required-contribution
+    name: required-contribution (${{ github.event_name }})
     needs:
       - ci-subpackage
       - check
