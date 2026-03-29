@@ -37,10 +37,12 @@ jobs:
       - uses: actions/checkout@v6
 
       - id: check-event
+        name: Check if there are no open PRs for contribution -> main on push to contribution
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
           echo "Checking if the workflow should execute for this event"
           if [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/contribution" ]]; then
             echo "This is a push event to contribution branch, checking for open PRs..."
@@ -58,6 +60,7 @@ jobs:
           fi
 
       - id: check-sync
+        name: Check if contribution branch is in sync with main to skip duplicate runs for identical content
         if: steps.check-event.outputs.should-run == 'true'
         shell: bash
         run: |
