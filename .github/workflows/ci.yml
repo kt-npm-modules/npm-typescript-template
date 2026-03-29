@@ -85,6 +85,7 @@ jobs:
           fi
 
       - id: finalize
+        name: Finalize whether the workflow should run based on previous checks
         shell: bash
         run: |
           if [[ "${{ steps.check-event.outputs.should-run }}" != "true" ]]; then
