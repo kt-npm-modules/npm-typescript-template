@@ -32,7 +32,7 @@ jobs:
   check-execution:
     runs-on: ubuntu-latest
     outputs:
-      should-run: ${{ steps.check-event.outputs.should-run }}
+      should-run: ${{ steps.finalize.outputs.should-run }}
     steps:
       - uses: actions/checkout@v6
 
@@ -54,6 +54,41 @@ jobs:
             fi
           else
             echo "This is not a push event to contribution branch, proceeding with this workflow."
+            echo "should-run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - id: check-sync
+        if: steps.check-event.outputs.should-run == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "Checking whether contribution content is identical to main..."
+
+          git fetch origin main contribution
+
+          main_tree="$(git rev-parse origin/main^{tree})"
+          head_tree="$(git rev-parse HEAD^{tree})"
+
+          echo "origin/main tree: $main_tree"
+          echo "HEAD tree:        $head_tree"
+
+          if [[ "$main_tree" == "$head_tree" ]]; then
+            echo "Contribution content is identical to main, skipping duplicate run."
+            echo "should-run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Contribution content differs from main, proceeding with this workflow."
+            echo "should-run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - id: finalize
+        shell: bash
+        run: |
+          if [[ "${{ steps.check-event.outputs.should-run }}" != "true" ]]; then
+            echo "should-run=false" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ steps.check-sync.outputs.should-run }}" != "true" ]]; then
+            echo "should-run=false" >> "$GITHUB_OUTPUT"
+          else
             echo "should-run=true" >> "$GITHUB_OUTPUT"
           fi
 
