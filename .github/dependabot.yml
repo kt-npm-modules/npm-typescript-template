@@ -29,6 +29,7 @@ updates:
           - '*'
         update-types:
           - 'major'
+        group-by: dependency-name
 
     commit-message:
       prefix: 'dependabot'
