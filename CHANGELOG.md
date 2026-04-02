@@ -1,5 +1,15 @@
 # @ktarmyshov/npm-typescript-template
 
+## 0.0.17
+
+### Patch Changes
+
+- b1d6427: dependabot: directory '/', update typescript-eslint
+- 6947831: dependabot: directory '/', update eslint
+- 312968a: dependabot: directory '/', update @vitest/coverage-istanbul from 4.1.1 to 4.1.2
+- 312968a: dependabot: directory '/', update vitest from 4.1.1 to 4.1.2
+- 53d2fc4: dependabot: directory '/', update typescript-eslint from 8.57.2 to 8.58.0
+
 ## 0.0.16
 
 ### Patch Changes
