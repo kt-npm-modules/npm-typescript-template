@@ -1,5 +1,11 @@
 # @ktarmyshov/npm-typescript-template
 
+## 0.0.18
+
+### Patch Changes
+
+- dd0a273: dependabot: directory '/', update typescript-eslint from 8.57.2 to 8.58.0
+
 ## 0.0.17
 
 ### Patch Changes
