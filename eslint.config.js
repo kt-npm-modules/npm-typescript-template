@@ -26,18 +26,3 @@ export default defineConfig(
 		}
 	}
 );
-
-/*tseslint.config(
-	includeIgnoreFile(gitignorePath),
-	eslint.configs.recommended,
-	...tseslint.configs.recommended,
-	prettier,
-	{
-		languageOptions: {
-			globals: {
-				...globals.browser,
-				...globals.node
-			}
-		}
-	}
-);*/
