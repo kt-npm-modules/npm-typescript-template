@@ -117,7 +117,7 @@ jobs:
         shell: bash
         run: |
           # Set the node version to use in the matrix
-          value='${{ vars.MATRIX_NODE_VERSION || env.DEFAULT_MATRIX_NODE_VERSION || "" }}'
+          value='${{ vars.MATRIX_NODE_VERSION || env.DEFAULT_MATRIX_NODE_VERSION || '' }}'
           printf 'matrix-node-version=%s\n' "$value" >> "$GITHUB_OUTPUT"
 
       - id: sonar
