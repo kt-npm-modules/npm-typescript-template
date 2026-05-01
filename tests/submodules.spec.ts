@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { submodule1, submodule2, submodule3 } from '../src';
+import { submodule1, submodule2, submodule3 } from '../src/index.js';
 
 describe('Submodules', () => {
 	describe('Submodule 1', () => {
