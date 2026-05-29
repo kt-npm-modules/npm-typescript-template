@@ -1,5 +1,34 @@
 # @ktarmyshov/npm-typescript-template
 
+## 0.1.0
+
+### Minor Changes
+
+- d95024a: Replace istanbul with V8
+
+### Patch Changes
+
+- d95024a: dependabot: directory '/', update typescript
+- d95024a: dependabot: directory '/', update eslint
+- d95024a: dependabot: directory '/', update globals
+- d95024a: dependabot: directory '/', update tsc-alias
+- d95024a: dependabot: directory '/', update typescript-eslint
+- d95024a: dependabot: directory '/', update @eslint/compat
+- d95024a: dependabot: directory '/', update @types/node
+- d95024a: dependabot: directory '/', update publint
+- d95024a: dependabot: directory '/', update typescript-eslint
+- d95024a: dependabot: directory '/', update @types/node
+- d95024a: dependabot: directory '/', update @vitest/coverage-istanbul
+- d95024a: dependabot: directory '/', update eslint
+- d95024a: dependabot: directory '/', update publint
+- d95024a: dependabot: directory '/', update typescript-eslint
+- d95024a: dependabot: directory '/', update vitest
+- d95024a: dependabot: directory '/', update @types/node
+- d95024a: dependabot: directory '/', update @vitest/coverage-istanbul
+- d95024a: dependabot: directory '/', update typescript-eslint
+- d95024a: dependabot: directory '/', update vitest
+- b003ae4: dependabot: directory '/', update typescript-eslint
+
 ## 0.0.18
 
 ### Patch Changes
