@@ -1,62 +1,63 @@
 #!/bin/bash
 
-# Scan direct dependencies and devDependencies in package.json
-# check if there are linked packages globally available
-# and link them to the local node_modules
+# Optionally link locally-developed packages into node_modules after install.
+#
+# This script links a package iff ALL THREE are true:
+#   1. The package name appears in LINK_PACKAGES below.
+#   2. The package is a direct entry of dependencies/devDependencies in
+#      package.json (no transitive walk).
+#   3. The package is currently registered as a global npm link
+#      (`npm ls -g --depth=0 --link=true`).
+#
+# When nothing matches (e.g. on CI runners with no global links, or on a
+# developer machine that has not run `npm link` in the package's repo),
+# the script exits 0 without invoking `npm link`. This is the safety
+# mechanism — no separate $CI guard is required.
 
-# Get all dependencies and devDependencies into one array
-allDependencies=()
-if command -v jq >/dev/null 2>&1; then
-  if jq -e '.dependencies' package.json >/dev/null; then
-    allDependencies+=($(jq -r '.dependencies | keys[]' package.json))
-  fi
-  if jq -e '.devDependencies' package.json >/dev/null; then
-    allDependencies+=($(jq -r '.devDependencies | keys[]' package.json))
-  fi
-else
-  echo "jq is not installed. Setting allDependencies to an empty array."
-  allDependencies=()
-fi
+set -eu
+
+LINK_PACKAGES=(
+)
 
 separator="------------------------------------------"
 
-echo -e "Checking for linked packages from dependencies and devDependencies..."
-# Extract available global link package names only
-# npm ls -g --depth=0 --link=true
-#  example output per package: typesafe-utilities@0.2.2 -> ./../../../../../git/typesafe-utilities
-#  We extract only the package name `typesafe-utilities`
-available_global_link_packages=$(
-  # Get the list of globally linked packages
-  npm ls -g --depth=0 --link=true 2>/dev/null | \
-  # Filter out the lines that contain the package name and version
-  awk -F ' -> ' '/ -> / {print $1}' | \
-  # Remove the version number and keep only the package name
-  awk -F '@' '{print $1 "@" $2}' | \
-  # Remove prefix like '└── ' or '├── ' before the package name
-  sed 's/^[^ ]* //g' | \
-  # remove duplicates
-  sort -u | \
-  # replace '\n' with ' '
-  tr '\n' ' '
+if [ ${#LINK_PACKAGES[@]} -eq 0 ]; then
+  echo "LINK_PACKAGES is empty — nothing to link."
+  exit 0
+fi
+
+if ! command -v jq >/dev/null 2>&1; then
+  echo "jq is required to run this script. Skipping link step."
+  exit 0
+fi
+
+# Direct deps + devDeps of THIS project (no transitive walk).
+direct_deps=$(
+  jq -r '((.dependencies // {}) + (.devDependencies // {})) | keys[]' package.json
 )
-echo -e "Available global link packages:\n${separator}\n${available_global_link_packages}\n${separator}\n"
 
-# Now construct the list of packages to link
-packages_to_link=()
-for package in "${allDependencies[@]}"; do
-  # Check if the package is available globally linked
-  if [[ " ${available_global_link_packages[@]} " =~ " ${package} " ]]; then
-    # If it is, add it to the list of packages to link
-    packages_to_link+=("$package")
-  fi
+# Globally available npm links — clean JSON parse, no awk/sed acrobatics.
+global_linked=$(
+  npm ls -g --depth=0 --link=true --json 2>/dev/null \
+    | jq -r '.dependencies // {} | keys[]'
+)
+
+echo -e "Globally linked packages:\n${separator}\n${global_linked:-<none>}\n${separator}\n"
+
+# Triple intersection: declared ∩ direct deps ∩ globally linked.
+to_link=()
+for pkg in "${LINK_PACKAGES[@]}"; do
+  printf '%s\n' "$direct_deps"   | grep -qxF "$pkg" || continue
+  printf '%s\n' "$global_linked" | grep -qxF "$pkg" || continue
+  to_link+=("$pkg")
 done
-echo -e "Packages to link:\n${separator}\n${packages_to_link[@]}\n${separator}\n"
 
-# Now link the packages in one npm link command, if there are any
-if [ ${#packages_to_link[@]} -eq 0 ]; then
+if [ ${#to_link[@]} -eq 0 ]; then
   echo "No packages to link."
   exit 0
 fi
-npm link "${packages_to_link[@]}"
+
+echo -e "Packages to link:\n${separator}\n${to_link[*]}\n${separator}\n"
+npm link "${to_link[@]}"
 echo -e "\033[1;33mWarning: You may need to make sure that the linked packages are released and up to date.\033[0m"
 echo -e "\033[1;33mWarning: While the checks may work locally, they may fail on CI/CD if the linked packages are not released and up to date.\033[0m"

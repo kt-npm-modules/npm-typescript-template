@@ -56,11 +56,9 @@
 	},
 	"files": [
 		"dist",
+		"CHANGELOG.md",
 		"!dist/**/*.test.*",
-		"!dist/**/*.spec.*",
-		"!tests",
-		"!examples",
-		"!benchmarks"
+		"!dist/**/*.spec.*"
 	],
 	"devDependencies": {
 		"@changesets/cli": "^2.28.1",
