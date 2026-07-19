@@ -1,5 +1,21 @@
 # @ktarmyshov/npm-typescript-template
 
+## 0.1.3
+
+### Patch Changes
+
+- a8528c0: dependabot: directory '/', update @types/node
+- a8528c0: dependabot: directory '/', update prettier
+- a8528c0: dependabot: directory '/', update typescript-eslint
+- da291e3: dependabot: directory '/', update @types/node
+- da291e3: dependabot: directory '/', update @vitest/coverage-v8
+- da291e3: dependabot: directory '/', update eslint
+- da291e3: dependabot: directory '/', update prettier
+- da291e3: dependabot: directory '/', update typescript-eslint
+- da291e3: dependabot: directory '/', update vitest
+- 01c5593: dependabot: directory '/', update @changesets/cli
+- 01c5593: dependabot: directory '/', update typescript-eslint
+
 ## 0.1.2
 
 ### Patch Changes
