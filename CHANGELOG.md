@@ -1,5 +1,13 @@
 # @ktarmyshov/npm-typescript-template
 
+## 0.1.6
+
+### Patch Changes
+
+- e413b62: dependabot: dependency updates for PR #142
+- 6d22804: dependabot: dependency updates for PR #144
+- 09d0f5c: dependabot: dependency updates for PR #145
+
 ## 0.1.5
 
 ### Patch Changes
